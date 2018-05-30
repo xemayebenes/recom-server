@@ -1,8 +1,9 @@
 import express from 'express';
 import { graphqlExpress, graphiqlExpress } from 'apollo-server-express';
 import bodyParser from 'body-parser';
-import schema from './schema';
 import { ApolloEngine } from 'apollo-engine';
+
+import schema from './schema';
 
 const ENGINE_API_KEY = 'service:xemayebenes-5525:pUrFWPsXjneQ0AM-fG9JMw'; // TODO
 

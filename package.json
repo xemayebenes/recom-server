@@ -114,7 +114,19 @@
     },
     "jest": {
         "testEnvironment": "node",
-        "rootDir": "src"
+        "rootDir": "src",
+        "collectCoverage": true,
+        "mapCoverage": true,
+        "coverageReporters": [
+            "lcov",
+            "text-summary"
+        ],
+        "coverageDirectory": "../coverage",
+        "collectCoverageFrom": [
+            "**/*.js",
+            "!app.js",
+            "!index.js"
+        ]
     },
     "directories": {
         "test": "test"
