@@ -1,15 +1,15 @@
 import nock from 'nock';
-import Connector from '../index'
+import MovieDataBase from '../movieDataBase/index'
 
 describe('CONNECTOR MOVIE DATA BASE', () => {
     let connector;
     const host = 'https://api.themoviedb.org/3/';
     const apiKeyTest = 'apiKeyTest';
     beforeAll(() => {
-        connector = Connector({
+        connector = MovieDataBase({
             apiKey: apiKeyTest,
         });
-    })
+    });
 
     describe('generate urls', () => {
         describe('generateSearchFilmUriRequest', () => {
