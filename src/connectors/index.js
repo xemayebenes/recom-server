@@ -1,15 +1,23 @@
-import fetch from 'node-fetch';
-import { searchFilm, searchSeries, fetchMovie, fetchVideoData, fetchSerie, fetchSerieVideoData } from './movieDataBase';
-import { fetchOMDBMovie, fetchOMDBSerie } from './omdb';
-const FortuneCookie = {
-    getOne() {
-        return fetch('http://fortunecookieapi.herokuapp.com/v1/cookie')
-            .then(res => res.json())
-            .then(res => {
-                return res[0].fortune.message;
-            });
-    },
+// const FortuneCookie = {
+//     getOne() {
+//         return fetch('http://fortunecookieapi.herokuapp.com/v1/cookie')
+//             .then(res => res.json())
+//             .then(res => {
+//                 return res[0].fortune.message;
+//             });
+//     },
+// };
+
+export default ({
+    movieDataBaseService,
+    omdbService
+}) => {
+    return {
+        movieDataBaseService: {
+            ...movieDataBaseService,
+        },
+        omdbService: {
+            ...omdbService
+        }
+    }
 };
-
-
-export { FortuneCookie, searchFilm, searchSeries, fetchMovie, fetchVideoData, fetchSerie, fetchSerieVideoData, fetchOMDBMovie, fetchOMDBSerie };

@@ -1,5 +1,4 @@
 import { makeExecutableSchema } from 'graphql-tools';
-import resolvers from '../resolvers';
 import { Rating, FilmOMDB, SerieOMDB } from './omdb'
 import {
     SearchMovieItem,
@@ -14,26 +13,27 @@ import {
 
 import queries from './queries';
 
-
-
-const schema = makeExecutableSchema({
-    typeDefs: [
-        queries,
-        Rating,
-        FilmOMDB,
-        SerieOMDB,
-        SearchMovieItem,
-        SearchSerieItem,
-        FilmMDB,
-        SerieMDB,
-        VideoData,
-        Season,
-        Genre,
-        Images,
-    ],
+export default ({
     resolvers
-});
+}) => {
 
-// addMockFunctionsToSchema({ schema, mocks });
+    const schema = makeExecutableSchema({
+        typeDefs: [
+            queries,
+            Rating,
+            FilmOMDB,
+            SerieOMDB,
+            SearchMovieItem,
+            SearchSerieItem,
+            FilmMDB,
+            SerieMDB,
+            VideoData,
+            Season,
+            Genre,
+            Images,
+        ],
+        resolvers
+    });
 
-export default schema;
+    return schema;
+}

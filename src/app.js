@@ -3,7 +3,30 @@ import { graphqlExpress, graphiqlExpress } from 'apollo-server-express';
 import bodyParser from 'body-parser';
 import { ApolloEngine } from 'apollo-engine';
 
-import schema from './schema';
+import MovieDataBaseService from './connectors/movieDataBase';
+import OmdbService from './connectors/omdb';
+import Connectors from './connectors';
+import Resolvers from './resolvers';
+import Schema from './schema';
+
+const movieDataBaseService = MovieDataBaseService({
+    //apiKey:''
+});
+const omdbService = OmdbService({
+    //apiKey: ''
+});
+const connectors = Connectors({
+    movieDataBaseService,
+    omdbService
+});
+
+const resolvers = Resolvers({
+    connectors
+});
+
+const schema = Schema({
+    resolvers,
+})
 
 const ENGINE_API_KEY = 'service:xemayebenes-5525:pUrFWPsXjneQ0AM-fG9JMw'; // TODO
 
