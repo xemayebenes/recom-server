@@ -10,14 +10,18 @@
 
 export default ({
     movieDataBaseService,
-    omdbService
+    omdbService,
+    dataBaseService,
 }) => {
     return {
         movieDataBaseService: {
             ...movieDataBaseService,
         },
         omdbService: {
-            ...omdbService
+            ...omdbService,
+        },
+        dataBaseService: {
+            ...dataBaseService,
         }
     }
 };

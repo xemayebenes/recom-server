@@ -5,9 +5,18 @@ import { ApolloEngine } from 'apollo-engine';
 
 import MovieDataBaseService from './connectors/movieDataBase';
 import OmdbService from './connectors/omdb';
+import DataBase from './connectors/database';
 import Connectors from './connectors';
 import Resolvers from './resolvers';
 import Schema from './schema';
+
+
+const dataBasse = DataBase({
+    dbAddress: 'mongodb://localhost/recom',
+});
+
+dataBasse.connect();
+
 
 const movieDataBaseService = MovieDataBaseService({
     //apiKey:''
@@ -17,7 +26,8 @@ const omdbService = OmdbService({
 });
 const connectors = Connectors({
     movieDataBaseService,
-    omdbService
+    omdbService,
+    dataBaseService: dataBasse,
 });
 
 const resolvers = Resolvers({
@@ -27,6 +37,8 @@ const resolvers = Resolvers({
 const schema = Schema({
     resolvers,
 })
+
+
 
 const ENGINE_API_KEY = 'service:xemayebenes-5525:pUrFWPsXjneQ0AM-fG9JMw'; // TODO
 

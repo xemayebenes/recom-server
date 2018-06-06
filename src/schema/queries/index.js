@@ -7,5 +7,7 @@ type Query {
   getMDBSerie(id: Int!, language: String): SerieMDB @cacheControl(maxAge: 5)
   getOMDBFilm(id: String!): FilmOMDB
   getOMDBSerie(title: String!): SerieOMDB @cacheControl(maxAge: 5)
+  getUserSeries(userId: String!): [Serie]
+  getUserMovies(userId: String!): [Movie]
 }
 `;

@@ -11,7 +11,10 @@ import {
     Images,
 } from './movieDataBase';
 
+import { Movie, Serie } from './database';
+
 import queries from './queries';
+import mutations from './mutations';
 
 export default ({
     resolvers
@@ -20,6 +23,7 @@ export default ({
     const schema = makeExecutableSchema({
         typeDefs: [
             queries,
+            mutations,
             Rating,
             FilmOMDB,
             SerieOMDB,
@@ -31,6 +35,8 @@ export default ({
             Season,
             Genre,
             Images,
+            Movie,
+            Serie,
         ],
         resolvers
     });
