@@ -30,8 +30,8 @@ export const SearchSerieItem = `
     origin_country: [String]  
   }`;
 
-export const FilmMDB = `
-  type FilmMDB {
+export const Movie = `
+  type Movie {
     externalId: Int!
     imdb_id: String
     genres: [Genre]
@@ -45,11 +45,11 @@ export const FilmMDB = `
     vote_average: Float
     images: Images!
     videoData: [VideoData]
-    omdbData: FilmOMDB
+    omdbData: FilmOMDBData
   }`;
 
-export const SerieMDB = `
-  type SerieMDB @cacheControl(maxAge: 5){
+export const Serie = `
+  type Serie @cacheControl(maxAge: 5){
     externalId: Int!
     genres: [Genre]
     name: String !
@@ -63,7 +63,7 @@ export const SerieMDB = `
     number_of_seasons: Int
     seasons: [Season]
     videoData: [VideoData]
-    omdbData: SerieOMDB
+    omdbData: SerieOMDBData
   }`;
 export const VideoData = `
   type VideoData @cacheControl(maxAge: 5){

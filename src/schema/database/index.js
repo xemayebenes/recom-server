@@ -1,15 +1,15 @@
-export const Movie = `
-  type Movie {
+export const UserMovie = `
+  type UserMovie {
     id: ID!
     externalId: Int
-    filmMDB: FilmMDB
+    film: Movie
   }
 `;
 
-export const Serie = `
-type Serie {
+export const UserSerie = `
+type UserSerie {
   id: ID!
   externalId: Int
-  serieMDB: SerieMDB
+  serie: Serie
 }
 `;

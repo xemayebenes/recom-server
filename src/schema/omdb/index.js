@@ -4,8 +4,8 @@ export const Rating = `
         Value:String
     }
 `
-export const FilmOMDB = `
-    type FilmOMDB {
+export const FilmOMDBData = `
+    type FilmOMDBData {
         Title: String
         Year: String
         Rated: String
@@ -34,8 +34,8 @@ export const FilmOMDB = `
     }
 `
 
-export const SerieOMDB = `
-    type SerieOMDB @cacheControl(maxAge: 5){  
+export const SerieOMDBData = `
+    type SerieOMDBData @cacheControl(maxAge: 5){  
         Title: String
         Year: String
         Rated: String

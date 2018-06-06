@@ -1,17 +1,17 @@
 import { makeExecutableSchema } from 'graphql-tools';
-import { Rating, FilmOMDB, SerieOMDB } from './omdb'
+import { Rating, FilmOMDBData, SerieOMDBData } from './omdb'
 import {
     SearchMovieItem,
     SearchSerieItem,
-    FilmMDB,
-    SerieMDB,
+    Movie,
+    Serie,
     VideoData,
     Season,
     Genre,
     Images,
 } from './movieDataBase';
 
-import { Movie, Serie } from './database';
+import { UserMovie, UserSerie } from './database';
 
 import queries from './queries';
 import mutations from './mutations';
@@ -25,18 +25,18 @@ export default ({
             queries,
             mutations,
             Rating,
-            FilmOMDB,
-            SerieOMDB,
+            FilmOMDBData,
+            SerieOMDBData,
             SearchMovieItem,
             SearchSerieItem,
-            FilmMDB,
-            SerieMDB,
+            Movie,
+            Serie,
             VideoData,
             Season,
             Genre,
             Images,
-            Movie,
-            Serie,
+            UserMovie,
+            UserSerie,
         ],
         resolvers
     });
