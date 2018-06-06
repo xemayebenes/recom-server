@@ -1,6 +1,13 @@
 export default ({
     connectors,
 }) => {
+
+    const checkCredentials = (user, userRequired) => {
+        if (userRequired !== user) {
+            throw new Error('not authorized');
+        }
+    };
+
     const resolvers = {
         Query: {
             searchFilms(_, { searchText, language }) {
@@ -21,10 +28,12 @@ export default ({
             // getOMDBSerie(_, { title }) {
             //     return connectors.omdbService.fetchOMDBSerie(title)
             // },
-            getUserSeries(_, { userId }) {
+            getUserSeries(_, { userId }, context) {
+                checkCredentials(context.user, userId);
                 return connectors.dataBaseService.getSeriesByUser(userId);
             },
-            getUserMovies(_, { userId }) {
+            getUserMovies(_, { userId }, context) {
+                checkCredentials(context.user, userId);
                 return connectors.dataBaseService.getMoviesByUser(userId);
             }
         },
@@ -55,12 +64,12 @@ export default ({
             }
         },
         Mutation: {
-            addMovie: async(root, { externalId }) => {
-                const movie = await connectors.dataBaseService.createMovie(externalId)
+            addMovie: async(root, { externalId }, context) => {
+                const movie = await connectors.dataBaseService.createMovie(externalId, context.user)
                 return movie;
             },
-            addSerie: async(root, { externalId }) => {
-                return await connectors.dataBaseService.createSerie(externalId);
+            addSerie: async(root, { externalId }, context) => {
+                return await connectors.dataBaseService.createSerie(externalId, context.user);
             },
         },
     };

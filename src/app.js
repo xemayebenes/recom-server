@@ -1,4 +1,6 @@
 import express from 'express';
+import jwt from 'express-jwt';
+
 import { graphqlExpress, graphiqlExpress } from 'apollo-server-express';
 import bodyParser from 'body-parser';
 import { ApolloEngine } from 'apollo-engine';
@@ -55,13 +57,19 @@ const engine = new ApolloEngine({
     }
 });
 
+const secret = process.env.JWT_SECRET || 'xema2018'
 const graphQLServer = express();
 
-graphQLServer.use('/graphql', bodyParser.json(), graphqlExpress({
-    schema,
-    tracing: true,
-    cacheControl: true
-}));
+const jwtCheck = jwt({ secret }); // change out your secret for each environment
+graphQLServer.use(jwtCheck);
+
+
+
+graphQLServer.use('/graphql',
+    bodyParser.json(),
+    graphqlExpress((req) => ({ context: req.user, schema, tracing: true, cacheControl: true })));
+
+
 graphQLServer.use('/graphiql', graphiqlExpress({ endpointURL: '/graphql' }));
 
 // graphQLServer.listen(GRAPHQL_PORT, () =>

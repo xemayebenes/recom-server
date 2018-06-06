@@ -46,7 +46,7 @@ export default ({
         Mongoose.connect('mongodb://localhost/recom', {});
     };
 
-    dataBase.createMovie = async(externalId, userId = '5b15b7a9379a6b763911c023') => {
+    dataBase.createMovie = async(externalId, userId) => {
         const movie = new Movie({ externalId, user: userId })
         await movie.save()
             .then(async() => {
@@ -61,7 +61,7 @@ export default ({
             });
         return movie;
     };
-    dataBase.createSerie = async(externalId, userId = '5b15b7a9379a6b763911c023') => {
+    dataBase.createSerie = async(externalId, userId) => {
         const serie = new Serie({ externalId, user: userId })
         await serie.save()
             .then(async() => {
