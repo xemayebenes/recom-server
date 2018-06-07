@@ -1,5 +1,6 @@
 import express from 'express';
 import jwt from 'express-jwt';
+import jsonwebtoken from 'jsonwebtoken';
 
 import { graphqlExpress, graphiqlExpress } from 'apollo-server-express';
 import bodyParser from 'body-parser';
@@ -12,12 +13,17 @@ import Connectors from './connectors';
 import Resolvers from './resolvers';
 import Schema from './schema';
 
+const generateJWT = ({ userId }) =>
+    jsonwebtoken.sign({ userId }, 'xema2018', {
+        expiresIn: 172800, // 2 days if not set
+    });
 
-const dataBasse = DataBase({
+
+const dataBase = DataBase({
     dbAddress: 'mongodb://localhost/recom',
 });
 
-dataBasse.connect();
+dataBase.connect();
 
 
 const movieDataBaseService = MovieDataBaseService({
@@ -29,7 +35,7 @@ const omdbService = OmdbService({
 const connectors = Connectors({
     movieDataBaseService,
     omdbService,
-    dataBaseService: dataBasse,
+    dataBaseService: dataBase,
 });
 
 const resolvers = Resolvers({
@@ -61,12 +67,29 @@ const secret = process.env.JWT_SECRET || 'xema2018'
 const graphQLServer = express();
 
 const jwtCheck = jwt({ secret }); // change out your secret for each environment
-graphQLServer.use(jwtCheck);
+//graphQLServer.use(jwtCheck);
 
 
+//TODO CHANGE TO MODULE
+graphQLServer.post('/token', bodyParser.json(),
+    async(req, res) => {
+        const { email, password } = req.body;
+        const user = await dataBase.getUserByEmail(email, password);
+        if (!user) {
+            res.send({
+                success: false,
+                jwt: null
+            })
+        }
+        res.send({
+            success: true,
+            jwt: generateJWT({ userId: user.id })
+        });
+    });
 
 graphQLServer.use('/graphql',
     bodyParser.json(),
+    jwtCheck,
     graphqlExpress((req) => ({ context: req.user, schema, tracing: true, cacheControl: true })));
 
 

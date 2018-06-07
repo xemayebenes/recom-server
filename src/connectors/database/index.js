@@ -15,6 +15,7 @@ export default ({
 
     const UserSchema = Mongoose.Schema({
         email: String,
+        password: String,
         movies: [{ type: Schema.Types.ObjectId, ref: 'Item' }],
         series: [{ type: Schema.Types.ObjectId, ref: 'Item' }],
 
@@ -91,5 +92,6 @@ export default ({
 
     dataBase.getLastItemsByUser = (userId) => LastItem.find({ user: userId }).populate('item').sort({ date: 1 }).limit(10);
 
+    dataBase.getUserByEmail = (email, password) => User.findOne({ email, password });
     return dataBase
 };

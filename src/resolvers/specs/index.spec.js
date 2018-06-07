@@ -37,7 +37,7 @@ describe('CONNECTOR MOVIE DATA BASE', () => {
         describe('addMovie', () => {
             beforeEach(async() => {
                 context = {
-                    user: 'userId1',
+                    userId: 'userId1',
                 };
                 await resolvers.Mutation.addMovie(obj, { externalId: 'extId11' }, context);
             });
@@ -49,7 +49,7 @@ describe('CONNECTOR MOVIE DATA BASE', () => {
         describe('addSerie', () => {
             beforeEach(async() => {
                 context = {
-                    user: 'userId1',
+                    userId: 'userId1',
                 };
                 await resolvers.Mutation.addSerie(obj, { externalId: 'extId11' }, context);
             });
@@ -100,7 +100,7 @@ describe('CONNECTOR MOVIE DATA BASE', () => {
             describe('when authorized', () => {
                 beforeEach(async() => {
                     context = {
-                        user: 'user1',
+                        userId: 'user1',
                     };
                     await resolvers.Query.getUserSeries(obj, { userId: 'user1' }, context);
                 });
@@ -112,7 +112,7 @@ describe('CONNECTOR MOVIE DATA BASE', () => {
             describe('when unauthorized', () => {
                 beforeEach(() => {
                     context = {
-                        user: 'other',
+                        userId: 'other',
                     };
                 });
 
@@ -126,7 +126,7 @@ describe('CONNECTOR MOVIE DATA BASE', () => {
             describe('when authorized', () => {
                 beforeEach(async() => {
                     context = {
-                        user: 'user1',
+                        userId: 'user1',
                     };
                     await resolvers.Query.getUserMovies(obj, { userId: 'user1' }, context);
                 });
@@ -138,7 +138,7 @@ describe('CONNECTOR MOVIE DATA BASE', () => {
             describe('when unauthorized', () => {
                 beforeEach(() => {
                     context = {
-                        user: 'other',
+                        userId: 'other',
                     };
                 });
 
@@ -152,7 +152,7 @@ describe('CONNECTOR MOVIE DATA BASE', () => {
             describe('when authorized', () => {
                 beforeEach(async() => {
                     context = {
-                        user: 'user1',
+                        userId: 'user1',
                     };
                     await resolvers.Query.getUserLastItems(obj, { userId: 'user1' }, context);
                 });
@@ -164,7 +164,7 @@ describe('CONNECTOR MOVIE DATA BASE', () => {
             describe('when unauthorized', () => {
                 beforeEach(() => {
                     context = {
-                        user: 'other',
+                        userId: 'other',
                     };
                 });
 
@@ -178,7 +178,7 @@ describe('CONNECTOR MOVIE DATA BASE', () => {
             describe('when authorized', () => {
                 beforeEach(async() => {
                     context = {
-                        user: 'user1',
+                        userId: 'user1',
                     };
                     await resolvers.Query.getUserMovie(obj, { userId: 'user1', id: 'movieId1' }, context);
                 });
@@ -190,7 +190,7 @@ describe('CONNECTOR MOVIE DATA BASE', () => {
             describe('when unauthorized', () => {
                 beforeEach(() => {
                     context = {
-                        user: 'other',
+                        userId: 'other',
                     };
                 });
 
@@ -204,7 +204,7 @@ describe('CONNECTOR MOVIE DATA BASE', () => {
             describe('when authorized', () => {
                 beforeEach(async() => {
                     context = {
-                        user: 'user1',
+                        userId: 'user1',
                     };
                     await resolvers.Query.getUserSerie(obj, { userId: 'user1', id: 'serieId1' }, context);
                 });
@@ -216,7 +216,7 @@ describe('CONNECTOR MOVIE DATA BASE', () => {
             describe('when unauthorized', () => {
                 beforeEach(() => {
                     context = {
-                        user: 'other',
+                        userId: 'other',
                     };
                 });
 

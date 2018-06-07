@@ -1,5 +1,6 @@
 import { GraphQLScalarType } from 'graphql';
 import { Kind } from 'graphql/language'
+import jwt from 'jsonwebtoken';
 
 export default ({
     connectors,
@@ -10,6 +11,8 @@ export default ({
             throw new Error('not authorized');
         }
     };
+
+
 
     const resolvers = {
         Query: {
@@ -32,23 +35,23 @@ export default ({
             //     return connectors.omdbService.fetchOMDBSerie(title)
             // },
             getUserSeries(_, { userId }, context) {
-                checkCredentials(context.user, userId);
+                checkCredentials(context.userId, userId);
                 return connectors.dataBaseService.getSeriesByUser(userId);
             },
             getUserMovies(_, { userId }, context) {
-                checkCredentials(context.user, userId);
+                checkCredentials(context.userId, userId);
                 return connectors.dataBaseService.getMoviesByUser(userId);
             },
             getUserLastItems(_, { userId }, context) {
-                checkCredentials(context.user, userId);
+                checkCredentials(context.userId, userId);
                 return connectors.dataBaseService.getLastItemsByUser(userId);
             },
             getUserMovie(_, { userId, id }, context) {
-                checkCredentials(context.user, userId);
+                checkCredentials(context.userId, userId);
                 return connectors.dataBaseService.getMovieById(id);
             },
             getUserSerie(_, { userId, id }, context) {
-                checkCredentials(context.user, userId);
+                checkCredentials(context.userId, userId);
                 return connectors.dataBaseService.getSerieById(id);
             },
         },
@@ -99,10 +102,10 @@ export default ({
         },
         Mutation: {
             addMovie: (root, { externalId }, context) => {
-                return connectors.dataBaseService.createMovie(externalId, context.user);
+                return connectors.dataBaseService.createMovie(externalId, context.userId);
             },
             addSerie: (root, { externalId }, context) => {
-                return connectors.dataBaseService.createSerie(externalId, context.user);
+                return connectors.dataBaseService.createSerie(externalId, context.userId);
             },
         },
         Date: new GraphQLScalarType({
