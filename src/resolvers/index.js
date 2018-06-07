@@ -1,3 +1,6 @@
+import { GraphQLScalarType } from 'graphql';
+import { Kind } from 'graphql/language'
+
 export default ({
     connectors,
 }) => {
@@ -35,7 +38,11 @@ export default ({
             getUserMovies(_, { userId }, context) {
                 checkCredentials(context.user, userId);
                 return connectors.dataBaseService.getMoviesByUser(userId);
-            }
+            },
+            getUserLastItems(_, { userId }, context) {
+                checkCredentials(context.user, userId);
+                return connectors.dataBaseService.getLastItemsByUser(userId);
+            },
         },
         Movie: {
             videoData(movie) {
@@ -63,15 +70,49 @@ export default ({
                 return connectors.movieDataBaseService.fetchSerie(userSerie.externalId);
             }
         },
-        Mutation: {
-            addMovie: async(root, { externalId }, context) => {
-                const movie = await connectors.dataBaseService.createMovie(externalId, context.user)
-                return movie;
-            },
-            addSerie: async(root, { externalId }, context) => {
-                return await connectors.dataBaseService.createSerie(externalId, context.user);
+        ItemInterface: {
+            __resolveType(data, context) {
+                if (data.kind === 'Serie') {
+                    return 'Serie';
+                } else {
+                    return 'Movie';
+                }
             },
         },
+        LastItem: {
+            item(lastItem) {
+                if (lastItem.item.kind === 'Serie') {
+                    return connectors.movieDataBaseService.fetchSerie(lastItem.item.externalId);
+
+                } else {
+                    return connectors.movieDataBaseService.fetchMovie(lastItem.item.externalId);
+                }
+            },
+        },
+        Mutation: {
+            addMovie: (root, { externalId }, context) => {
+                return connectors.dataBaseService.createMovie(externalId, context.user);
+            },
+            addSerie: (root, { externalId }, context) => {
+                return connectors.dataBaseService.createSerie(externalId, context.user);
+            },
+        },
+        Date: new GraphQLScalarType({
+            name: 'Date',
+            description: 'Date custom scalar type',
+            parseValue(value) {
+                return new Date(value); // value from the client
+            },
+            serialize(value) {
+                return value.getTime(); // value sent to the client
+            },
+            parseLiteral(ast) {
+                if (ast.kind === Kind.INT) {
+                    return parseInt(ast.value, 10); // ast value is always in string format
+                }
+                return null;
+            },
+        }),
     };
     return resolvers;
 }

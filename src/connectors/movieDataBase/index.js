@@ -77,7 +77,7 @@ export default ({
     connector.fetchSerie = (id, language = 'es') =>
         fetch(connector.generateGeTVUriRequest(id, language))
         .then(response => response.json())
-        .then(connector.normalizeItemData)
+        .then(connector.normalizeTVData)
 
     connector.fetchVideoData = (movieId) =>
         fetch(connector.generateGetVideoMovieUriRequest(movieId))

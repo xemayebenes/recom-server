@@ -7,5 +7,6 @@ type Query {
   getSerie(id: Int!, language: String): Serie @cacheControl(maxAge: 5)
   getUserSeries(userId: String!): [UserSerie]
   getUserMovies(userId: String!): [UserMovie]
+  getUserLastItems(userId: String!): [LastItem]
 }
 `;

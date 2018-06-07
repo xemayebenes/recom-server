@@ -9,9 +9,10 @@ import {
     Season,
     Genre,
     Images,
+    ItemInterface,
 } from './movieDataBase';
 
-import { UserMovie, UserSerie } from './database';
+import { UserMovie, UserSerie, LastItem, Date } from './database';
 
 import queries from './queries';
 import mutations from './mutations';
@@ -37,6 +38,9 @@ export default ({
             Images,
             UserMovie,
             UserSerie,
+            LastItem,
+            Date,
+            ItemInterface,
         ],
         resolvers
     });

@@ -13,3 +13,15 @@ type UserSerie {
   serie: Serie
 }
 `;
+export const LastItem = `
+type LastItem {
+  id: ID!
+  date: Date
+  kind: String
+  item: ItemInterface 
+}
+`;
+
+export const Date = `
+  scalar Date
+`;

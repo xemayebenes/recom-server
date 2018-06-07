@@ -27,34 +27,34 @@ export default ({
         user: { type: Schema.Types.ObjectId, ref: 'User' },
     }, options);
 
-    const Item = Mongoose.model('items', ItemSchema);
+    const Item = Mongoose.model('Item', ItemSchema);
 
-    const LastItemsSchema = Mongoose.Schema({
+    const LastItemSchema = Mongoose.Schema({
         date: Date,
         kind: String,
         item: { type: Schema.Types.ObjectId, ref: 'Item' },
+        user: { type: Schema.Types.ObjectId, ref: 'User' },
     });
 
-    const LastItems = Mongoose.model('lastItems', LastItemsSchema);
+    const LastItem = Mongoose.model('LastItem', LastItemSchema);
 
     const User = Mongoose.model('users', UserSchema);
     const Movie = Item.discriminator('Movie', new Mongoose.Schema({}, options));
     const Serie = Item.discriminator('Serie', new Mongoose.Schema({}, options));
 
 
-    dataBase.connect = () => {
-        Mongoose.connect('mongodb://localhost/recom', {});
-    };
+    dataBase.connect = () => Mongoose.connect('mongodb://localhost/recom', {});
 
     dataBase.createMovie = async(externalId, userId) => {
         const movie = new Movie({ externalId, user: userId })
         await movie.save()
             .then(async() => {
                 await User.findByIdAndUpdate(userId, { $push: { movies: movie } }, { safe: true, upsert: true });
-                const lastItem = new LastItems({
+                const lastItem = new LastItem({
                     date: new Date(),
                     kind: MOVIE_ITEM,
                     item: movie,
+                    user: userId,
                 });
                 await lastItem.save();
                 return;
@@ -66,24 +66,24 @@ export default ({
         await serie.save()
             .then(async() => {
                 await User.findByIdAndUpdate(userId, { $push: { series: serie } }, { safe: true, upsert: true });
-                const lastItem = new LastItems({
+                const lastItem = new LastItem({
                     date: new Date(),
                     kind: SERIE_ITEM,
                     item: serie,
+                    user: userId,
                 });
                 await lastItem.save();
                 return;
             });
         return serie;
     };
-    const getItemByUser = (Model, userId) => {
-        return Model.find({ user: userId });
-    }
-    dataBase.getSeriesByUser = async(userId) => {
-        return await getItemByUser(Serie, userId);
-    };
-    dataBase.getMoviesByUser = async(userId) => {
-        return await getItemByUser(Movie, userId);
-    };
+    const getItemByUser = (Model, userId) => Model.find({ user: userId });
+
+    dataBase.getSeriesByUser = (userId) => getItemByUser(Serie, userId);
+
+    dataBase.getMoviesByUser = (userId) => getItemByUser(Movie, userId);
+
+    dataBase.getLastItemsByUser = (userId) => LastItem.find({ user: userId }).populate('item').sort({ date: 1 }).limit(10);
+
     return dataBase
 };

@@ -289,6 +289,10 @@ describe('CONNECTOR MOVIE DATA BASE', () => {
 
                 await connector.searchFilm(query);
             });
+            afterEach(() => {
+                spy1.mockClear();
+                spy2.mockClear();
+            });
             it('should call to generateSearchFilmUriRequest', () => {
                 expect(spy1).toHaveBeenCalledWith(query, 'es');
             });
@@ -316,6 +320,10 @@ describe('CONNECTOR MOVIE DATA BASE', () => {
 
                 await connector.searchSeries(query);
             });
+            afterEach(() => {
+                spy1.mockClear();
+                spy2.mockClear();
+            });
             it('should call to generateSearchTvUriRequest', () => {
                 expect(spy1).toHaveBeenCalledWith(query, 'es');
             });
@@ -342,6 +350,10 @@ describe('CONNECTOR MOVIE DATA BASE', () => {
 
                 await connector.fetchMovie(id);
             });
+            afterEach(() => {
+                spy1.mockClear();
+                spy2.mockClear();
+            });
             it('should call to generateGetMovieUriRequest', () => {
                 expect(spy1).toHaveBeenCalledWith(id, 'es');
             });
@@ -356,7 +368,7 @@ describe('CONNECTOR MOVIE DATA BASE', () => {
             let spy2;
             beforeEach(async() => {
                 spy1 = jest.spyOn(connector, 'generateGeTVUriRequest');
-                spy2 = jest.spyOn(connector, 'normalizeItemData');
+                spy2 = jest.spyOn(connector, 'normalizeTVData');
 
                 nock(host)
                     .get(path)
@@ -367,6 +379,10 @@ describe('CONNECTOR MOVIE DATA BASE', () => {
                     .reply(200, getMovieResponse);
 
                 await connector.fetchSerie(id);
+            });
+            afterEach(() => {
+                spy1.mockClear();
+                spy2.mockClear();
             });
             it('should call to generateGeTVUriRequest', () => {
                 expect(spy1).toHaveBeenCalledWith(id, 'es');

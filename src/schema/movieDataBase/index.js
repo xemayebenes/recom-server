@@ -30,35 +30,48 @@ export const SearchSerieItem = `
     origin_country: [String]  
   }`;
 
-export const Movie = `
-  type Movie {
+export const ItemInterface = `interface ItemInterface {
     externalId: Int!
-    imdb_id: String
+    title: String!
     genres: [Genre]
-    original_title: String!
     overview: String!
     popularity: Float
-    release_date: String
-    title: String!
-    video: Boolean
     vote_count: Int
     vote_average: Float
+    images: Images!
+  }`;
+
+export const Movie = `
+  type Movie implements ItemInterface{
+    externalId: Int!
+    title: String!
+    genres: [Genre]
+    overview: String!
+    popularity: Float
+    vote_count: Int
+    vote_average: Float
+    images: Images!
+    imdb_id: String
+    original_title: String!
+    release_date: String
+    video: Boolean
     images: Images!
     videoData: [VideoData]
     omdbData: FilmOMDBData
   }`;
 
 export const Serie = `
-  type Serie @cacheControl(maxAge: 5){
+  type Serie implements ItemInterface @cacheControl(maxAge: 5){
     externalId: Int!
+    title: String!
     genres: [Genre]
-    name: String !
-    original_name: String
     overview: String!
     popularity: Float
     vote_count: Int
     vote_average: Float
     images: Images!
+    name: String !
+    original_name: String
     number_of_episodes: Int
     number_of_seasons: Int
     seasons: [Season]
