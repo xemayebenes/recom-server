@@ -71,7 +71,7 @@ export default ({
             }
         },
         ItemInterface: {
-            __resolveType(data, context) {
+            __resolveType(data) {
                 if (data.kind === 'Serie') {
                     return 'Serie';
                 } else {

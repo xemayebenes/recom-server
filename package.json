@@ -127,7 +127,8 @@
         "collectCoverageFrom": [
             "**/*.js",
             "!app.js",
-            "!index.js"
+            "!index.js",
+            "!schema/index.js"
         ]
     },
     "directories": {

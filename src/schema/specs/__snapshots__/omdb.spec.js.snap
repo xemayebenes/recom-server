@@ -1,0 +1,71 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SCHEMA OMDB FilmOMDBData should match snapshot 1`] = `
+"
+    type FilmOMDBData {
+        Title: String
+        Year: String
+        Rated: String
+        Released: String
+        Runtime: String
+        Genre: String
+        Director: String
+        Writer: String
+        Actors: String
+        Plot: String
+        Language: String
+        Country: String
+        Awards: String
+        Poster: String
+        Ratings: [Rating]
+        Metascore: String
+        imdbRating: Float
+        imdbVotes: Int
+        imdbID: String
+        Type: String
+        DVD: String
+        BoxOffice: String
+        Production: String
+        Website: String
+        Response: Boolean
+    }
+"
+`;
+
+exports[`SCHEMA OMDB Rating should match snapshot 1`] = `
+"
+    type Rating @cacheControl(maxAge: 5){
+        Source: String
+        Value:String
+    }
+"
+`;
+
+exports[`SCHEMA OMDB SerieOMDBData should match snapshot 1`] = `
+"
+    type SerieOMDBData @cacheControl(maxAge: 5){  
+        Title: String
+        Year: String
+        Rated: String
+        Released: String
+        Runtime: String
+        Genre: String
+        Director: String
+        Writer: String
+        Actors: String
+        Plot: String
+        Language: String
+        Country: String
+        Awards: String
+        Poster: String
+        Ratings: [Rating]
+        Metascore: String
+        imdbRating: Float
+        imdbVotes: Int
+        imdbID: String
+        Type: String
+        totalSeasons: Int
+        Response: Boolean
+    }
+"
+`;

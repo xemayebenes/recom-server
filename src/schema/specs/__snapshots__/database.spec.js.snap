@@ -1,0 +1,38 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SCHEMA DATA BASE Date should match snapshot 1`] = `
+"
+  scalar Date
+"
+`;
+
+exports[`SCHEMA DATA BASE LastItem should match snapshot 1`] = `
+"
+type LastItem {
+  id: ID!
+  date: Date
+  kind: String
+  item: ItemInterface 
+}
+"
+`;
+
+exports[`SCHEMA DATA BASE UserMovie should match snapshot 1`] = `
+"
+  type UserMovie {
+    id: ID!
+    externalId: Int
+    film: Movie
+  }
+"
+`;
+
+exports[`SCHEMA DATA BASE UserSerie should match snapshot 1`] = `
+"
+type UserSerie {
+  id: ID!
+  externalId: Int
+  serie: Serie
+}
+"
+`;

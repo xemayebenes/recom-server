@@ -1,0 +1,135 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SCHEMA MOVIE DATA BASE Genre should match snapshot 1`] = `
+"
+  type Genre @cacheControl(maxAge: 5){
+    id: Int!
+    name: String
+  }"
+`;
+
+exports[`SCHEMA MOVIE DATA BASE Images should match snapshot 1`] = `
+"
+type Images @cacheControl(maxAge: 5){
+    main: String!
+        secondary: String!
+}"
+`;
+
+exports[`SCHEMA MOVIE DATA BASE ItemInterface should match snapshot 1`] = `
+"interface ItemInterface {
+    externalId: Int!
+    title: String!
+    genres: [Genre]
+    overview: String!
+    popularity: Float
+    vote_count: Int
+    vote_average: Float
+    images: Images!
+  }"
+`;
+
+exports[`SCHEMA MOVIE DATA BASE Movie should match snapshot 1`] = `
+"
+  type Movie implements ItemInterface{
+    externalId: Int!
+    title: String!
+    genres: [Genre]
+    overview: String!
+    popularity: Float
+    vote_count: Int
+    vote_average: Float
+    images: Images!
+    imdb_id: String
+    original_title: String!
+    release_date: String
+    video: Boolean
+    images: Images!
+    videoData: [VideoData]
+    omdbData: FilmOMDBData
+  }"
+`;
+
+exports[`SCHEMA MOVIE DATA BASE SearchMovieItem should match snapshot 1`] = `
+"
+type SearchMovieItem {
+    externalId: Int!
+    title: String
+    images: Images!
+    popularity: Float
+    vote_average: Float
+    overview: String!
+    genre_ids: [Int]
+    original_language: String
+    vote_count: Int
+    adult: Boolean
+    release_date: String
+    original_title: String
+    video: Boolean
+  }"
+`;
+
+exports[`SCHEMA MOVIE DATA BASE SearchSerieItem should match snapshot 1`] = `
+"
+  type SearchSerieItem {
+    externalId: Int!
+    title: String !
+    images: Images!
+    popularity: Float
+    vote_average: Float
+    overview: String!
+    genre_ids: [Int]
+    original_language: String
+    vote_count: Int
+    first_air_date: String
+    origin_country: [String]  
+  }"
+`;
+
+exports[`SCHEMA MOVIE DATA BASE Season should match snapshot 1`] = `
+"
+  type Season @cacheControl(maxAge: 5){
+    id: Int
+    air_date: String
+    episode_count: Int
+    poster_path: String
+    season_number: Int
+  }
+  "
+`;
+
+exports[`SCHEMA MOVIE DATA BASE Serie should match snapshot 1`] = `
+"
+  type Serie implements ItemInterface @cacheControl(maxAge: 5){
+    externalId: Int!
+    title: String!
+    genres: [Genre]
+    overview: String!
+    popularity: Float
+    vote_count: Int
+    vote_average: Float
+    images: Images!
+    name: String !
+    original_name: String
+    number_of_episodes: Int
+    number_of_seasons: Int
+    seasons: [Season]
+    videoData: [VideoData]
+    omdbData: SerieOMDBData
+  }"
+`;
+
+exports[`SCHEMA MOVIE DATA BASE VideoData should match snapshot 1`] = `
+"
+  type VideoData @cacheControl(maxAge: 5){
+    id: String
+    iso_639_1: String
+    iso_3166_1: String
+    key: String
+    name: String
+    site: String
+    size: Int
+    type: String
+    trailer: String
+  }"
+`;
