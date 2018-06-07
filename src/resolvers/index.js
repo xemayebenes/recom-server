@@ -19,11 +19,11 @@ export default ({
             searchSeries(_, { searchText, language }) {
                 return connectors.movieDataBaseService.searchSeries(searchText, language)
             },
-            getMovie(_, { id, language }) {
-                return connectors.movieDataBaseService.fetchMovie(id, language)
+            getMovie(_, { externalId, language }) {
+                return connectors.movieDataBaseService.fetchMovie(externalId, language)
             },
-            getSerie(_, { id, language }) {
-                return connectors.movieDataBaseService.fetchSerie(id, language)
+            getSerie(_, { externalId, language }) {
+                return connectors.movieDataBaseService.fetchSerie(externalId, language)
             },
             // getOMDBFilm(_, { id }) {
             //     return connectors.omdbService.fetchOMDBMovie(id)
@@ -42,6 +42,14 @@ export default ({
             getUserLastItems(_, { userId }, context) {
                 checkCredentials(context.user, userId);
                 return connectors.dataBaseService.getLastItemsByUser(userId);
+            },
+            getUserMovie(_, { userId, id }, context) {
+                checkCredentials(context.user, userId);
+                return connectors.dataBaseService.getMovieById(id);
+            },
+            getUserSerie(_, { userId, id }, context) {
+                checkCredentials(context.user, userId);
+                return connectors.dataBaseService.getSerieById(id);
             },
         },
         Movie: {

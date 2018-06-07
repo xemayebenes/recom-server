@@ -6,11 +6,13 @@ type Query {
   getFortuneCookie: String @cacheControl(maxAge: 5)
   searchFilms(searchText: String!, language: String): [SearchMovieItem]
   searchSeries(searchText: String!, language: String): [SearchSerieItem]
-  getMovie(id: Int!, language: String): Movie
-  getSerie(id: Int!, language: String): Serie @cacheControl(maxAge: 5)
+  getMovie(externalId: Int!, language: String): Movie
+  getSerie(externalId: Int!, language: String): Serie @cacheControl(maxAge: 5)
   getUserSeries(userId: String!): [UserSerie]
   getUserMovies(userId: String!): [UserMovie]
   getUserLastItems(userId: String!): [LastItem]
+  getUserMovie(userId: String!, id: String!): UserMovie
+  getUserSerie(userId: String!, id: String!): UserSerie
 }
 "
 `;

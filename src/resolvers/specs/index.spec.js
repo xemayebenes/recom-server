@@ -17,6 +17,8 @@ describe('CONNECTOR MOVIE DATA BASE', () => {
             getLastItemsByUser: jest.fn(),
             createMovie: jest.fn(),
             createSerie: jest.fn(),
+            getMovieById: jest.fn(),
+            getSerieById: jest.fn(),
         },
         omdbService: {
             fetchOMDBMovie: jest.fn(),
@@ -78,7 +80,7 @@ describe('CONNECTOR MOVIE DATA BASE', () => {
         });
         describe('getMovie', () => {
             beforeEach(async() => {
-                await resolvers.Query.getMovie(obj, { id: 1, language: 'es' });
+                await resolvers.Query.getMovie(obj, { externalId: 1, language: 'es' });
             });
 
             it('should call to connectors.movieDataBaseService.fetchMovie', () => {
@@ -87,7 +89,7 @@ describe('CONNECTOR MOVIE DATA BASE', () => {
         });
         describe('getSerie', () => {
             beforeEach(async() => {
-                await resolvers.Query.getSerie(obj, { id: 1, language: 'es' });
+                await resolvers.Query.getSerie(obj, { externalId: 1, language: 'es' });
             });
 
             it('should call to connectors.movieDataBaseService.fetchSerie', () => {
@@ -168,6 +170,58 @@ describe('CONNECTOR MOVIE DATA BASE', () => {
 
                 it('should throw not authorized error', () => {
                     expect(() => resolvers.Query.getUserLastItems(obj, { userId: 'user1' }, context))
+                        .toThrowError();
+                });
+            });
+        });
+        describe('getUserMovie', () => {
+            describe('when authorized', () => {
+                beforeEach(async() => {
+                    context = {
+                        user: 'user1',
+                    };
+                    await resolvers.Query.getUserMovie(obj, { userId: 'user1', id: 'movieId1' }, context);
+                });
+
+                it('should call to connectors.dataBaseService.getMovieById', () => {
+                    expect(connectors.dataBaseService.getMovieById).toHaveBeenCalledWith('movieId1');
+                });
+            });
+            describe('when unauthorized', () => {
+                beforeEach(() => {
+                    context = {
+                        user: 'other',
+                    };
+                });
+
+                it('should throw not authorized error', () => {
+                    expect(() => resolvers.Query.getUserMovie(obj, { userId: 'user1', id: 'movieId1' }, context))
+                        .toThrowError();
+                });
+            });
+        });
+        describe('getUserSerie', () => {
+            describe('when authorized', () => {
+                beforeEach(async() => {
+                    context = {
+                        user: 'user1',
+                    };
+                    await resolvers.Query.getUserSerie(obj, { userId: 'user1', id: 'serieId1' }, context);
+                });
+
+                it('should call to connectors.dataBaseService.getSerieById', () => {
+                    expect(connectors.dataBaseService.getSerieById).toHaveBeenCalledWith('serieId1');
+                });
+            });
+            describe('when unauthorized', () => {
+                beforeEach(() => {
+                    context = {
+                        user: 'other',
+                    };
+                });
+
+                it('should throw not authorized error', () => {
+                    expect(() => resolvers.Query.getUserSerie(obj, { userId: 'user1', id: 'serieId1' }, context))
                         .toThrowError();
                 });
             });

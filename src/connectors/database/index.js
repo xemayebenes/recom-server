@@ -77,11 +77,17 @@ export default ({
             });
         return serie;
     };
-    const getItemByUser = (Model, userId) => Model.find({ user: userId });
+    const getItemsByUser = (Model, userId) => Model.find({ user: userId });
 
-    dataBase.getSeriesByUser = (userId) => getItemByUser(Serie, userId);
+    const getItemById = (Model, id) => Model.findById(id);
 
-    dataBase.getMoviesByUser = (userId) => getItemByUser(Movie, userId);
+    dataBase.getMovieById = (id) => getItemById(Movie, id);
+
+    dataBase.getSerieById = (id) => getItemById(Serie, id);
+
+    dataBase.getSeriesByUser = (userId) => getItemsByUser(Serie, userId);
+
+    dataBase.getMoviesByUser = (userId) => getItemsByUser(Movie, userId);
 
     dataBase.getLastItemsByUser = (userId) => LastItem.find({ user: userId }).populate('item').sort({ date: 1 }).limit(10);
 
