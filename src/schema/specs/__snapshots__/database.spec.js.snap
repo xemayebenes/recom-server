@@ -11,7 +11,7 @@ exports[`SCHEMA DATA BASE LastItem should match snapshot 1`] = `
 type LastItem {
   id: ID!
   date: Date
-  kind: String
+  type: String
   item: ItemInterface 
 }
 "

@@ -21,7 +21,7 @@ export default ({
 
     });
 
-    const options = { discriminatorKey: 'kind' };
+    const options = { discriminatorKey: 'type' };
 
     const ItemSchema = Mongoose.Schema({
         externalId: Number,
@@ -32,7 +32,7 @@ export default ({
 
     const LastItemSchema = Mongoose.Schema({
         date: Date,
-        kind: String,
+        type: String,
         item: { type: Schema.Types.ObjectId, ref: 'Item' },
         user: { type: Schema.Types.ObjectId, ref: 'User' },
     });
@@ -53,7 +53,7 @@ export default ({
                 await User.findByIdAndUpdate(userId, { $push: { movies: movie } }, { safe: true, upsert: true });
                 const lastItem = new LastItem({
                     date: new Date(),
-                    kind: MOVIE_ITEM,
+                    type: MOVIE_ITEM,
                     item: movie,
                     user: userId,
                 });
@@ -69,7 +69,7 @@ export default ({
                 await User.findByIdAndUpdate(userId, { $push: { series: serie } }, { safe: true, upsert: true });
                 const lastItem = new LastItem({
                     date: new Date(),
-                    kind: SERIE_ITEM,
+                    type: SERIE_ITEM,
                     item: serie,
                     user: userId,
                 });

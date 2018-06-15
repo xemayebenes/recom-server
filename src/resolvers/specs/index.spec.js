@@ -317,7 +317,7 @@ describe('CONNECTOR MOVIE DATA BASE', () => {
                 beforeEach(async() => {
                     lastItem = {
                         item: {
-                            kind: 'Serie',
+                            type: 'Serie',
                             externalId: 'extId2',
                         }
                     };
@@ -333,7 +333,7 @@ describe('CONNECTOR MOVIE DATA BASE', () => {
                 beforeEach(async() => {
                     lastItem = {
                         item: {
-                            kind: 'Movie',
+                            type: 'Movie',
                             externalId: 'extId3',
                         }
                     };
@@ -347,14 +347,14 @@ describe('CONNECTOR MOVIE DATA BASE', () => {
         });
     });
     describe('ItemInterface', () => {
-        describe('when kind is serie', () => {
+        describe('when type is serie', () => {
             it('should return "serie"', () => {
-                expect(resolvers.ItemInterface.__resolveType({ kind: 'Serie' })).toEqual('Serie');
+                expect(resolvers.ItemInterface.__resolveType({ type: 'Serie' })).toEqual('Serie');
             });
         });
-        describe('when kind is Movie', () => {
+        describe('when type is Movie', () => {
             it('should return "Movie"', () => {
-                expect(resolvers.ItemInterface.__resolveType({ kind: 'Movie' })).toEqual('Movie');
+                expect(resolvers.ItemInterface.__resolveType({ type: 'Movie' })).toEqual('Movie');
             });
         });
     });

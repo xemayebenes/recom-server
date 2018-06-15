@@ -83,7 +83,7 @@ export default ({
         },
         ItemInterface: {
             __resolveType(data) {
-                if (data.kind === 'Serie') {
+                if (data.type === 'Serie') {
                     return 'Serie';
                 } else {
                     return 'Movie';
@@ -92,7 +92,7 @@ export default ({
         },
         LastItem: {
             item(lastItem) {
-                if (lastItem.item.kind === 'Serie') {
+                if (lastItem.item.type === 'Serie') {
                     return connectors.movieDataBaseService.fetchSerie(lastItem.item.externalId);
 
                 } else {

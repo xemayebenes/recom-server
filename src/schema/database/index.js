@@ -17,7 +17,7 @@ export const LastItem = `
 type LastItem {
   id: ID!
   date: Date
-  kind: String
+  type: String
   item: ItemInterface 
 }
 `;
