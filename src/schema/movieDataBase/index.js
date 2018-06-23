@@ -31,6 +31,7 @@ export const SearchSerieItem = `
   }`;
 
 export const ItemInterface = `interface ItemInterface {
+    id: ID!
     externalId: Int!
     title: String!
     genres: [Genre]
@@ -43,6 +44,7 @@ export const ItemInterface = `interface ItemInterface {
 
 export const Movie = `
   type Movie implements ItemInterface{
+    id: ID!
     externalId: Int!
     title: String!
     genres: [Genre]
@@ -62,6 +64,7 @@ export const Movie = `
 
 export const Serie = `
   type Serie implements ItemInterface @cacheControl(maxAge: 5){
+    id: ID!
     externalId: Int!
     title: String!
     genres: [Genre]

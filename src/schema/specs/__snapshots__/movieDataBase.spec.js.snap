@@ -18,6 +18,7 @@ type Images @cacheControl(maxAge: 5){
 
 exports[`SCHEMA MOVIE DATA BASE ItemInterface should match snapshot 1`] = `
 "interface ItemInterface {
+    id: ID!
     externalId: Int!
     title: String!
     genres: [Genre]
@@ -32,6 +33,7 @@ exports[`SCHEMA MOVIE DATA BASE ItemInterface should match snapshot 1`] = `
 exports[`SCHEMA MOVIE DATA BASE Movie should match snapshot 1`] = `
 "
   type Movie implements ItemInterface{
+    id: ID!
     externalId: Int!
     title: String!
     genres: [Genre]
@@ -101,6 +103,7 @@ exports[`SCHEMA MOVIE DATA BASE Season should match snapshot 1`] = `
 exports[`SCHEMA MOVIE DATA BASE Serie should match snapshot 1`] = `
 "
   type Serie implements ItemInterface @cacheControl(maxAge: 5){
+    id: ID!
     externalId: Int!
     title: String!
     genres: [Genre]
