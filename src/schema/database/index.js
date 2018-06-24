@@ -1,6 +1,7 @@
 export const UserMovie = `
   type UserMovie {
     id: ID!
+    completed: Boolean
     externalId: Int
     film: Movie
   }
@@ -9,6 +10,7 @@ export const UserMovie = `
 export const UserSerie = `
 type UserSerie {
   id: ID!
+  completed: Boolean
   externalId: Int
   serie: Serie
 }

@@ -120,6 +120,20 @@ export default ({ connectors }) => {
           externalId,
           context.userId
         );
+      },
+      removeMovie: async (root, { id }, context) => {
+        await connectors.dataBaseService.removeMovie(id, context.userId);
+        return id;
+      },
+      removeSerie: async (root, { id }, context) => {
+        await connectors.dataBaseService.removeSerie(id, context.userId);
+        return id;
+      },
+      completeMovie: (root, { id }, context) => {
+        return connectors.dataBaseService.completeMovie(id, context.userId);
+      },
+      completeSerie: (root, { id }, context) => {
+        return connectors.dataBaseService.completeSerie(id, context.userId);
       }
     },
     Date: new GraphQLScalarType({
