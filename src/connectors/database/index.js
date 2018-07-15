@@ -45,7 +45,7 @@ export default ({ dbAddress = 'mongodb://localhost/recom' }) => {
 
   dataBase.connect = () =>
     Mongoose.connect(
-      'mongodb://localhost/recom',
+      'mongodb://recom:recom123@ds139251.mlab.com:39251/recom',
       {}
     );
 
