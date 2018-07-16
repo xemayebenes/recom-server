@@ -14,84 +14,97 @@ import Resolvers from './resolvers';
 import Schema from './schema';
 
 const generateJWT = ({ userId }) =>
-    jsonwebtoken.sign({ userId }, 'xema2018', {
-        expiresIn: 172800, // 2 days if not set
-    });
-
+  jsonwebtoken.sign({ userId }, 'xema2018', {
+    expiresIn: 172800 // 2 days if not set
+  });
 
 const dataBase = DataBase({
-    dbAddress: 'mongodb://localhost/recom',
+  dbAddress: 'mongodb://localhost/recom'
 });
 
 dataBase.connect();
 
-
 const movieDataBaseService = MovieDataBaseService({
-    //apiKey:''
+  //apiKey:''
 });
 const omdbService = OmdbService({
-    //apiKey: ''
+  //apiKey: ''
 });
 const connectors = Connectors({
-    movieDataBaseService,
-    omdbService,
-    dataBaseService: dataBase,
+  movieDataBaseService,
+  omdbService,
+  dataBaseService: dataBase
 });
 
 const resolvers = Resolvers({
-    connectors
+  connectors
 });
 
 const schema = Schema({
-    resolvers,
-})
-
-
+  resolvers
+});
 
 const ENGINE_API_KEY = 'service:xemayebenes-5525:pUrFWPsXjneQ0AM-fG9JMw'; // TODO
 
 const engine = new ApolloEngine({
-    apiKey: ENGINE_API_KEY,
-    stores: [{
-        name: 'inMemEmbeddedCache',
-        inMemory: {
-            cacheSize: 20971520 // 20 MB
-        }
-    }],
-    queryCache: {
-        publicFullQueryStore: 'inMemEmbeddedCache'
+  apiKey: ENGINE_API_KEY,
+  stores: [
+    {
+      name: 'inMemEmbeddedCache',
+      inMemory: {
+        cacheSize: 20971520 // 20 MB
+      }
     }
+  ],
+  queryCache: {
+    publicFullQueryStore: 'inMemEmbeddedCache'
+  }
 });
 
-const secret = process.env.JWT_SECRET || 'xema2018'
+const secret = process.env.JWT_SECRET || 'xema2018';
 const graphQLServer = express();
 
 const jwtCheck = jwt({ secret }); // change out your secret for each environment
 //graphQLServer.use(jwtCheck);
 
-
 //TODO CHANGE TO MODULE
-graphQLServer.post('/token', bodyParser.json(),
-    async(req, res) => {
-        const { email, password } = req.body;
-        const user = await dataBase.getUserByEmail(email, password);
-        if (!user) {
-            res.send({
-                success: false,
-                jwt: null
-            })
-        }
-        res.send({
-            success: true,
-            jwt: generateJWT({ userId: user.id })
-        });
+graphQLServer.post('/token', bodyParser.json(), async (req, res) => {
+  const { email, password } = req.body;
+  const user = await dataBase.getUserByEmail(email, password);
+  if (!user) {
+    res.send({
+      success: false,
+      jwt: null
     });
+  }
+  res.send({
+    success: true,
+    jwt: generateJWT({ userId: user.id })
+  });
+});
 
-graphQLServer.use('/graphql',
-    bodyParser.json(),
-    jwtCheck,
-    graphqlExpress((req) => ({ context: req.user, schema, tracing: true, cacheControl: true })));
+graphQLServer.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Credentials', true);
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+  res.header(
+    'Access-Control-Allow-Headers',
+    'Origin,X-Requested-With,Content-Type,Accept,content-type,application/json'
+  );
+  next();
+});
 
+graphQLServer.use(
+  '/graphql',
+  bodyParser.json(),
+  jwtCheck,
+  graphqlExpress(req => ({
+    context: req.user,
+    schema,
+    tracing: true,
+    cacheControl: true
+  }))
+);
 
 graphQLServer.use('/graphiql', graphiqlExpress({ endpointURL: '/graphql' }));
 
@@ -100,7 +113,5 @@ graphQLServer.use('/graphiql', graphiqlExpress({ endpointURL: '/graphql' }));
 //         `GraphiQL is now running on http://localhost:${GRAPHQL_PORT}/graphiql`
 //     )
 // );
-
-
 
 export { graphQLServer, engine };
