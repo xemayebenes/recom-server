@@ -7,8 +7,16 @@ const MOVIE_PATH = 'movie/';
 const TV_PATH = 'tv/';
 const FIND_PATH = 'find/';
 
-export const BACKDROP_BASE_IMAGE_URL = 'https://image.tmdb.org/t/p/w300/';
-export const POSTER_BASE_IMAGE_URL = 'https://image.tmdb.org/t/p/w342/';
+export const BACKDROP_BASE_IMAGE_URL = 'https://image.tmdb.org/t/p/';
+export const POSTER_BASE_IMAGE_URL = 'https://image.tmdb.org/t/p/';
+
+export const SMALL_BACKDROP_SIZE = 'w300';
+export const MEDIUM_BACKDROP_SIZE = 'w780';
+export const LARGE_BACKDROP_SIZE = 'w1280';
+
+export const SMALL_POSTER_SIZE = 'w92';
+export const MEDIUM_POSTER_SIZE = 'w500';
+export const LARGE_POSTER_SIZE = 'w780';
 
 export default ({ apiKey = 'aef9a2eff559d403c028eac5d3acf757' }) => {
   const connector = {};
@@ -44,8 +52,18 @@ export default ({ apiKey = 'aef9a2eff559d403c028eac5d3acf757' }) => {
     ...rest,
     externalId: id,
     images: {
-      main: POSTER_BASE_IMAGE_URL + poster_path,
-      secondary: BACKDROP_BASE_IMAGE_URL + backdrop_path
+      small: {
+        main: `${POSTER_BASE_IMAGE_URL}${SMALL_POSTER_SIZE}/${poster_path}`,
+        secondary: `${BACKDROP_BASE_IMAGE_URL}${SMALL_BACKDROP_SIZE}/${backdrop_path}`
+      },
+      medium: {
+        main: `${POSTER_BASE_IMAGE_URL}${MEDIUM_POSTER_SIZE}/${poster_path}`,
+        secondary: `${BACKDROP_BASE_IMAGE_URL}${MEDIUM_BACKDROP_SIZE}/${backdrop_path}`
+      },
+      large: {
+        main: `${POSTER_BASE_IMAGE_URL}${LARGE_POSTER_SIZE}/${poster_path}`,
+        secondary: `${BACKDROP_BASE_IMAGE_URL}${LARGE_BACKDROP_SIZE}/${backdrop_path}`
+      }
     }
   });
 
@@ -60,8 +78,18 @@ export default ({ apiKey = 'aef9a2eff559d403c028eac5d3acf757' }) => {
     externalId: id,
     title: name,
     images: {
-      main: POSTER_BASE_IMAGE_URL + poster_path,
-      secondary: BACKDROP_BASE_IMAGE_URL + backdrop_path
+      small: {
+        main: `${POSTER_BASE_IMAGE_URL}${SMALL_POSTER_SIZE}/${poster_path}`,
+        secondary: `${BACKDROP_BASE_IMAGE_URL}${SMALL_BACKDROP_SIZE}/${backdrop_path}`
+      },
+      medium: {
+        main: `${POSTER_BASE_IMAGE_URL}${MEDIUM_POSTER_SIZE}/${poster_path}`,
+        secondary: `${BACKDROP_BASE_IMAGE_URL}${MEDIUM_BACKDROP_SIZE}/${backdrop_path}`
+      },
+      large: {
+        main: `${POSTER_BASE_IMAGE_URL}${LARGE_POSTER_SIZE}/${poster_path}`,
+        secondary: `${BACKDROP_BASE_IMAGE_URL}${LARGE_BACKDROP_SIZE}/${backdrop_path}`
+      }
     }
   });
 

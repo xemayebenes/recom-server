@@ -11,8 +11,9 @@ exports[`SCHEMA MOVIE DATA BASE Genre should match snapshot 1`] = `
 exports[`SCHEMA MOVIE DATA BASE Images should match snapshot 1`] = `
 "
 type Images @cacheControl(maxAge: 5){
-    main: String!
-        secondary: String!
+    small: ImagesData
+    medium: ImagesData
+    large: ImagesData
 }"
 `;
 
@@ -84,7 +85,7 @@ exports[`SCHEMA MOVIE DATA BASE SearchSerieItem should match snapshot 1`] = `
     original_language: String
     vote_count: Int
     first_air_date: String
-    origin_country: [String]  
+    origin_country: [String]
   }"
 `;
 

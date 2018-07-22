@@ -21,6 +21,7 @@ exports[`SCHEMA DATA BASE UserMovie should match snapshot 1`] = `
 "
   type UserMovie {
     id: ID!
+    completed: Boolean
     externalId: Int
     film: Movie
   }
@@ -31,6 +32,7 @@ exports[`SCHEMA DATA BASE UserSerie should match snapshot 1`] = `
 "
 type UserSerie {
   id: ID!
+  completed: Boolean
   externalId: Int
   serie: Serie
 }

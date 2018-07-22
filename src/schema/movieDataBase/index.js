@@ -27,7 +27,7 @@ export const SearchSerieItem = `
     original_language: String
     vote_count: Int
     first_air_date: String
-    origin_country: [String]  
+    origin_country: [String]
   }`;
 
 export const ItemInterface = `interface ItemInterface {
@@ -110,6 +110,13 @@ export const Genre = `
 
 export const Images = `
 type Images @cacheControl(maxAge: 5){
+    small: ImagesData
+    medium: ImagesData
+    large: ImagesData
+}`;
+
+export const ImagesData = `
+type ImagesData @cacheControl(maxAge: 5){
     main: String!
-        secondary: String!
+    secondary: String!
 }`;
