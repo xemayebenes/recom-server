@@ -10,5 +10,6 @@ type Query {
   getUserLastItems(userId: String!): [LastItem]
   getUserMovie(userId: String!, id: String!): UserMovie
   getUserSerie(userId: String!, id: String!): UserSerie
+  notifications: [Notification]
 }
 `;

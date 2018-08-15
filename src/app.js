@@ -86,17 +86,6 @@ graphQLServer.post('/token', bodyParser.json(), async (req, res) => {
   });
 });
 
-// graphQLServer.use((req, res, next) => {
-//   res.header('Access-Control-Allow-Origin', '*');
-//   res.header('Access-Control-Allow-Credentials', true);
-//   res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-//   res.header(
-//     'Access-Control-Allow-Headers',
-//     'Origin,X-Requested-With,Content-Type,Accept,content-type,application/json'
-//   );
-//   next();
-// });
-
 graphQLServer.use(
   '/graphql',
   bodyParser.json(),
@@ -109,12 +98,12 @@ graphQLServer.use(
   }))
 );
 
-graphQLServer.use('/graphiql', graphiqlExpress({ endpointURL: '/graphql' }));
+graphQLServer.use(
+  '/graphiql',
+  graphiqlExpress({
+    endpointURL: '/graphql',
+    subscriptionsEndpoint: `ws://localhost:3001/subscriptions`
+  })
+);
 
-// graphQLServer.listen(GRAPHQL_PORT, () =>
-//     console.log(
-//         `GraphiQL is now running on http://localhost:${GRAPHQL_PORT}/graphiql`
-//     )
-// );
-
-export { graphQLServer, engine };
+export { graphQLServer, engine, schema };

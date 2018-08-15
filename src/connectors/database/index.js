@@ -1,47 +1,14 @@
 import Mongoose from 'mongoose';
 
+import { User, Item, LastItem, Notification, Movie, Serie } from './models';
+
 const MOVIE_ITEM = 'Movie';
 const SERIE_ITEM = 'Serie';
-const Schema = Mongoose.Schema;
 
-// import { Movie, Serie } from './models';
-
-export default ({ dbAddress = 'mongodb://localhost/recom' }) => {
+export default ({
+  dbAddress = 'mongodb://recom:recom123@ds139251.mlab.com:39251/recom'
+}) => {
   const dataBase = {};
-
-  const UserSchema = Mongoose.Schema({
-    email: String,
-    password: String,
-    movies: [{ type: Schema.Types.ObjectId, ref: 'Item' }],
-    series: [{ type: Schema.Types.ObjectId, ref: 'Item' }]
-  });
-
-  const options = { discriminatorKey: 'type' };
-
-  const ItemSchema = Mongoose.Schema(
-    {
-      externalId: Number,
-      completed: Boolean,
-      user: { type: Schema.Types.ObjectId, ref: 'User' }
-    },
-    options
-  );
-
-  const Item = Mongoose.model('Item', ItemSchema);
-
-  const LastItemSchema = Mongoose.Schema({
-    date: Date,
-    type: String,
-    completed: Boolean,
-    item: { type: Schema.Types.ObjectId, ref: 'Item' },
-    user: { type: Schema.Types.ObjectId, ref: 'User' }
-  });
-
-  const LastItem = Mongoose.model('LastItem', LastItemSchema);
-
-  const User = Mongoose.model('users', UserSchema);
-  const Movie = Item.discriminator('Movie', new Mongoose.Schema({}, options));
-  const Serie = Item.discriminator('Serie', new Mongoose.Schema({}, options));
 
   dataBase.connect = () =>
     Mongoose.connect(
@@ -69,6 +36,7 @@ export default ({ dbAddress = 'mongodb://localhost/recom' }) => {
     });
     return movie;
   };
+
   dataBase.createSerie = async (externalId, userId) => {
     const serie = new Serie({ externalId, user: userId, completed: false });
     await serie.save().then(async () => {
@@ -90,11 +58,11 @@ export default ({ dbAddress = 'mongodb://localhost/recom' }) => {
     return serie;
   };
 
-  dataBase.removeMovie = async (id, userId) => {
+  dataBase.removeMovie = async id => {
     await Movie.remove({ _id: id });
     await LastItem.remove({ item: id });
   };
-  dataBase.removeSerie = async (id, userId) => {
+  dataBase.removeSerie = async id => {
     await Serie.remove({ _id: id });
     await LastItem.remove({ item: id });
   };
@@ -130,5 +98,33 @@ export default ({ dbAddress = 'mongodb://localhost/recom' }) => {
 
   dataBase.getUserByEmail = (email, password) =>
     User.findOne({ email, password });
+
+  /***
+    NOTIFICATIONS
+  ****/
+
+  dataBase.addNotification = async (text, userId) => {
+    const notification = new Notification({ text, user: userId, new: true });
+    await notification.save().then(async () => {
+      await User.findByIdAndUpdate(
+        userId,
+        { $push: { notifications: notification } },
+        { safe: true, upsert: true }
+      );
+
+      return;
+    });
+    return notification;
+  };
+
+  dataBase.getNotification = id => Notification.findById(id);
+
+  dataBase.getUserNotifications = userId => Notification.find({ user: userId });
+
+  dataBase.markNotification = async id => {
+    await Notification.update({ _id: id }, { $set: { new: false } });
+    return dataBase.getNotification(id);
+  };
+
   return dataBase;
 };

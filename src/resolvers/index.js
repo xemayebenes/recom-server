@@ -1,8 +1,11 @@
 import { GraphQLScalarType } from 'graphql';
 import { Kind } from 'graphql/language';
 import jwt from 'jsonwebtoken';
+import { PubSub } from 'graphql-subscriptions';
 
 export default ({ connectors }) => {
+  const pubsub = new PubSub();
+
   const checkCredentials = (user, userRequired) => {
     if (userRequired !== user) {
       throw new Error('not authorized');
@@ -11,6 +14,9 @@ export default ({ connectors }) => {
 
   const resolvers = {
     Query: {
+      notifications: (_, args, context) => {
+        return connectors.dataBaseService.getUserNotifications(context.userId);
+      },
       searchFilms(_, { searchText, language }) {
         return connectors.movieDataBaseService.searchFilm(searchText, language);
       },
@@ -26,12 +32,6 @@ export default ({ connectors }) => {
       getSerie(_, { externalId, language }) {
         return connectors.movieDataBaseService.fetchSerie(externalId, language);
       },
-      // getOMDBFilm(_, { id }) {
-      //     return connectors.omdbService.fetchOMDBMovie(id)
-      // },
-      // getOMDBSerie(_, { title }) {
-      //     return connectors.omdbService.fetchOMDBSerie(title)
-      // },
       getUserSeries(_, { userId }, context) {
         checkCredentials(context.userId, userId);
         return connectors.dataBaseService.getSeriesByUser(userId);
@@ -108,7 +108,23 @@ export default ({ connectors }) => {
         };
       }
     },
+    Subscription: {
+      newNotification: {
+        subscribe: (rootValue, { userId }) => {
+          return pubsub.asyncIterator(userId);
+        }
+      }
+    },
     Mutation: {
+      pushNotification: async (root, { text, userId }) => {
+        const newNotification = await connectors.dataBaseService.addNotification(
+          text,
+          userId
+        );
+
+        pubsub.publish(userId, { newNotification });
+        return newNotification;
+      },
       addMovie: (root, { externalId }, context) => {
         return connectors.dataBaseService.createMovie(
           externalId,

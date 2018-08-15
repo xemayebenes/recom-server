@@ -14,15 +14,18 @@ import {
 } from './movieDataBase';
 
 import { UserMovie, UserSerie, LastItem, Date } from './database';
+import { Notification } from './notifications';
 
 import queries from './queries';
 import mutations from './mutations';
+import subscriptions from './subscriptions';
 
 export default ({ resolvers }) => {
   const schema = makeExecutableSchema({
     typeDefs: [
       queries,
       mutations,
+      subscriptions,
       Rating,
       FilmOMDBData,
       SerieOMDBData,
@@ -39,7 +42,8 @@ export default ({ resolvers }) => {
       UserSerie,
       LastItem,
       Date,
-      ItemInterface
+      ItemInterface,
+      Notification
     ],
     resolvers
   });
