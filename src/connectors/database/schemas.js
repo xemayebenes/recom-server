@@ -31,6 +31,10 @@ export const LastItemSchema = Mongoose.Schema({
 
 export const NotificationSchema = Mongoose.Schema({
   new: Boolean,
-  user: { type: Schema.Types.ObjectId, ref: 'User' },
-  text: String
+  user: { type: Schema.Types.ObjectId, ref: 'Users' },
+  from: { type: Schema.Types.ObjectId, ref: 'users' },
+  date: Date,
+  type: String,
+  title: String,
+  externalId: Number
 });

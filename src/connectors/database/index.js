@@ -96,15 +96,30 @@ export default ({
       .sort({ date: -1 })
       .limit(10);
 
-  dataBase.getUserByEmail = (email, password) =>
+  dataBase.getUserByEmailPassword = (email, password) =>
     User.findOne({ email, password });
+  dataBase.getUserByEmail = email => User.findOne({ email });
 
   /***
     NOTIFICATIONS
   ****/
 
-  dataBase.addNotification = async (text, userId) => {
-    const notification = new Notification({ text, user: userId, new: true });
+  dataBase.addNotification = async (
+    type,
+    title,
+    externalId,
+    userId,
+    userFromId
+  ) => {
+    const notification = new Notification({
+      user: userId,
+      new: true,
+      date: new Date(),
+      type,
+      title,
+      externalId,
+      from: userFromId
+    });
     await notification.save().then(async () => {
       await User.findByIdAndUpdate(
         userId,
@@ -112,14 +127,18 @@ export default ({
         { safe: true, upsert: true }
       );
 
-      return;
+      return notification.populate('from', 'email');
     });
-    return notification;
+    return dataBase.getNotification(notification.id);
   };
 
-  dataBase.getNotification = id => Notification.findById(id);
+  dataBase.getNotification = id =>
+    Notification.findById(id).populate('from', 'email');
 
-  dataBase.getUserNotifications = userId => Notification.find({ user: userId });
+  dataBase.getUserNotifications = userId =>
+    Notification.find({ user: userId })
+      .populate('from', 'email')
+      .sort({ date: -1 });
 
   dataBase.markNotification = async id => {
     await Notification.update({ _id: id }, { $set: { new: false } });

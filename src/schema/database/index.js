@@ -20,10 +20,17 @@ type LastItem {
   id: ID!
   date: Date
   type: String
-  item: ItemInterface 
+  item: ItemInterface
 }
 `;
 
 export const Date = `
   scalar Date
+`;
+
+export const User = `
+type User {
+  id: ID!
+  email: String
+}
 `;

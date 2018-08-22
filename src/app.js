@@ -73,7 +73,7 @@ graphQLServer.use(cors());
 //TODO CHANGE TO MODULE
 graphQLServer.post('/token', bodyParser.json(), async (req, res) => {
   const { email, password } = req.body;
-  const user = await dataBase.getUserByEmail(email, password);
+  const user = await dataBase.getUserByEmailPassword(email, password);
   if (!user) {
     res.send({
       success: false,

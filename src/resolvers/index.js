@@ -116,13 +116,29 @@ export default ({ connectors }) => {
       }
     },
     Mutation: {
-      pushNotification: async (root, { text, userId }) => {
+      pushNotification: async (
+        root,
+        { type, title, externalId, userEmail },
+        context
+      ) => {
+        const user = await connectors.dataBaseService.getUserByEmail(userEmail);
+
         const newNotification = await connectors.dataBaseService.addNotification(
-          text,
-          userId
+          type,
+          title,
+          externalId,
+          user.id,
+          context.userId
         );
 
-        pubsub.publish(userId, { newNotification });
+        pubsub.publish(user.id, { newNotification });
+        return newNotification;
+      },
+      markNotification: async (root, { id }) => {
+        const newNotification = await connectors.dataBaseService.markNotification(
+          id
+        );
+
         return newNotification;
       },
       addMovie: (root, { externalId }, context) => {

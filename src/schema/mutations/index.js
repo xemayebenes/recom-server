@@ -6,6 +6,7 @@ export default `
     removeSerie(id: String!): String
     completeMovie(id: String!): UserMovie
     completeSerie(id: String!): UserSerie
-    pushNotification(text: String!, userId: String!): Notification
+    pushNotification(type: String!,title: String, externalId:Int, userEmail: String!): Notification
+    markNotification(id: String!): Notification
   }
 `;

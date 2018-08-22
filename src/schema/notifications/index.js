@@ -2,7 +2,11 @@
 export const Notification = `
     type Notification {
         id: ID!
-        text: String
         new: Boolean
+        date: Date
+        type: String
+        externalId: Int
+        title: String
+        from: User
     }
 `;
