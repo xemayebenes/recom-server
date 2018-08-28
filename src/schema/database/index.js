@@ -29,8 +29,18 @@ export const Date = `
 `;
 
 export const User = `
-type User {
-  id: ID!
-  email: String
-}
+  type User {
+    id: ID!
+    email: String
+  }
+`;
+
+export const List = `
+  type List {
+    id: ID!
+    name: String
+    date: Date
+    items: [ItemInterface]
+    user: User
+  }
 `;

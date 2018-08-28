@@ -5,7 +5,8 @@ import {
   options,
   ItemSchema,
   LastItemSchema,
-  NotificationSchema
+  NotificationSchema,
+  ListSchema
 } from './schemas';
 
 export const Notification = Mongoose.model('Notification', NotificationSchema);
@@ -24,3 +25,5 @@ export const Serie = Item.discriminator(
   'Serie',
   new Mongoose.Schema({}, options)
 );
+
+export const List = Mongoose.model('List', ListSchema);

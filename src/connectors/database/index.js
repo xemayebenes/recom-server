@@ -1,6 +1,16 @@
 import Mongoose from 'mongoose';
 
-import { User, Item, LastItem, Notification, Movie, Serie } from './models';
+import {
+  User,
+  Item,
+  LastItem,
+  Notification,
+  Movie,
+  Serie,
+  List
+} from './models';
+
+import listService from './services/lists.service';
 
 const MOVIE_ITEM = 'Movie';
 const SERIE_ITEM = 'Serie';
@@ -144,6 +154,11 @@ export default ({
     await Notification.update({ _id: id }, { $set: { new: false } });
     return dataBase.getNotification(id);
   };
+
+  /**
+    LISTS
+  **/
+  dataBase.listService = listService;
 
   return dataBase;
 };

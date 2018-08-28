@@ -16,7 +16,8 @@ export const ItemSchema = Mongoose.Schema(
   {
     externalId: Number,
     completed: Boolean,
-    user: { type: Schema.Types.ObjectId, ref: 'User' }
+    user: { type: Schema.Types.ObjectId, ref: 'User' },
+    list: { type: Schema.Types.ObjectId, ref: 'List' }
   },
   options
 );
@@ -27,6 +28,13 @@ export const LastItemSchema = Mongoose.Schema({
   completed: Boolean,
   item: { type: Schema.Types.ObjectId, ref: 'Item' },
   user: { type: Schema.Types.ObjectId, ref: 'User' }
+});
+
+export const ListSchema = Mongoose.Schema({
+  name: String,
+  date: Date,
+  items: [{ type: Schema.Types.ObjectId, ref: 'Item' }],
+  user: { type: Schema.Types.ObjectId, ref: 'users' }
 });
 
 export const NotificationSchema = Mongoose.Schema({

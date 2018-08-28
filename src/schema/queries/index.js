@@ -11,5 +11,7 @@ type Query {
   getUserMovie(userId: String!, id: String!): UserMovie
   getUserSerie(userId: String!, id: String!): UserSerie
   notifications: [Notification]
+  list(id: String!, userId: String!): List
+  lists(userId: String!): [List]
 }
 `;

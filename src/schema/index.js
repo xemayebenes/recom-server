@@ -13,7 +13,7 @@ import {
   ItemInterface
 } from './movieDataBase';
 
-import { UserMovie, UserSerie, LastItem, Date, User } from './database';
+import { UserMovie, UserSerie, LastItem, Date, User, List } from './database';
 import { Notification } from './notifications';
 
 import queries from './queries';
@@ -44,7 +44,8 @@ export default ({ resolvers }) => {
       Date,
       ItemInterface,
       Notification,
-      User
+      User,
+      List
     ],
     resolvers
   });

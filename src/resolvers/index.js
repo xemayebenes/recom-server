@@ -1,6 +1,5 @@
 import { GraphQLScalarType } from 'graphql';
 import { Kind } from 'graphql/language';
-import jwt from 'jsonwebtoken';
 import { PubSub } from 'graphql-subscriptions';
 
 export default ({ connectors }) => {
@@ -10,6 +9,18 @@ export default ({ connectors }) => {
     if (userRequired !== user) {
       throw new Error('not authorized');
     }
+  };
+
+  const fetchItemInterface = item => {
+    return Promise.resolve()
+      .then(() => {
+        if (item.type === 'Serie') {
+          return connectors.movieDataBaseService.fetchSerie(item.externalId);
+        } else {
+          return connectors.movieDataBaseService.fetchMovie(item.externalId);
+        }
+      })
+      .then(itemResolved => ({ ...itemResolved, id: item.id }));
   };
 
   const resolvers = {
@@ -51,6 +62,14 @@ export default ({ connectors }) => {
       getUserSerie(_, { userId, id }, context) {
         checkCredentials(context.userId, userId);
         return connectors.dataBaseService.getSerieById(id);
+      },
+      lists(_, { userId }, context) {
+        checkCredentials(context.userId, userId);
+        return connectors.dataBaseService.listService.getListsByUser(userId);
+      },
+      list(_, { id, userId }, context) {
+        checkCredentials(context.userId, userId);
+        return connectors.dataBaseService.listService.getList(id);
       }
     },
     Movie: {
@@ -92,20 +111,12 @@ export default ({ connectors }) => {
     },
     LastItem: {
       async item(lastItem) {
-        let item;
-        if (lastItem.item.type === 'Serie') {
-          item = await connectors.movieDataBaseService.fetchSerie(
-            lastItem.item.externalId
-          );
-        } else {
-          item = await connectors.movieDataBaseService.fetchMovie(
-            lastItem.item.externalId
-          );
-        }
-        return {
-          id: lastItem.item.id,
-          ...item
-        };
+        return fetchItemInterface(lastItem.item);
+      }
+    },
+    List: {
+      async items(list) {
+        return Promise.all(list.items.map(fetchItemInterface));
       }
     },
     Subscription: {
@@ -166,6 +177,24 @@ export default ({ connectors }) => {
       },
       completeSerie: (root, { id }, context) => {
         return connectors.dataBaseService.completeSerie(id, context.userId);
+      },
+      createList: (root, { name }, context) => {
+        return connectors.dataBaseService.listService.createList(
+          name,
+          context.userId
+        );
+      },
+      addItemToList: (root, { listId, itemId }, context) => {
+        return connectors.dataBaseService.listService.addItemToList(
+          listId,
+          itemId
+        );
+      },
+      removeItemFromList: (root, { listId, itemId }, context) => {
+        return connectors.dataBaseService.listService.removeItemFromList(
+          listId,
+          itemId
+        );
       }
     },
     Date: new GraphQLScalarType({
