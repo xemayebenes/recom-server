@@ -2,6 +2,11 @@ import Mongoose from 'mongoose';
 
 import { List, Item } from '../models';
 
+import itemsService from './items.service';
+
+const MOVIE_ITEM = 'Movie';
+const SERIE_ITEM = 'Serie';
+
 const findItems = items => {
   return new Promise((resolve, reject) => {
     Item.find(
@@ -70,11 +75,35 @@ const getList = id =>
     .populate('items')
     .populate('user');
 
+const importList = async (listId, userId) => {
+  const { name, description, type, items } = await List.findById(
+    listId
+  ).populate('items');
+
+  const itemsToUpdate = items.map(item => item.externalId);
+
+  const itemsCreated =
+    type === MOVIE_ITEM
+      ? await itemsService.addMultipleMovies(itemsToUpdate, userId)
+      : await itemsService.addMultipleSeries(itemsToUpdate, userId);
+
+  const newList = new List({
+    name,
+    description,
+    user: userId,
+    date: new Date(),
+    type,
+    items: itemsCreated
+  });
+  return newList.save();
+};
+
 export default {
   createList,
   getListsByUser,
   addItemToList,
   getList,
   removeItemFromList,
-  removeList
+  removeList,
+  importList
 };

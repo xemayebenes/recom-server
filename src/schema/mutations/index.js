@@ -12,5 +12,6 @@ export default `
     removeList(listId: String!): String
     addItemToList(listId: String!, itemId: String!): List
     removeItemFromList(listId: String!, itemId: String!): List
+    importList(listId:String!, userId:String!): List
   }
 `;
