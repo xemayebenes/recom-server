@@ -63,9 +63,12 @@ export default ({ connectors }) => {
         checkCredentials(context.userId, userId);
         return connectors.dataBaseService.getSerieById(id);
       },
-      lists(_, { userId }, context) {
+      lists(_, { userId, type }, context) {
         checkCredentials(context.userId, userId);
-        return connectors.dataBaseService.listService.getListsByUser(userId);
+        return connectors.dataBaseService.listService.getListsByUser(
+          userId,
+          type
+        );
       },
       list(_, { id, userId }, context) {
         checkCredentials(context.userId, userId);
@@ -178,11 +181,17 @@ export default ({ connectors }) => {
       completeSerie: (root, { id }, context) => {
         return connectors.dataBaseService.completeSerie(id, context.userId);
       },
-      createList: (root, { name }, context) => {
+      createList: (root, { name, description, type, items }, context) => {
         return connectors.dataBaseService.listService.createList(
           name,
+          description,
+          type,
+          items,
           context.userId
         );
+      },
+      removeList: (root, { listId }) => {
+        return connectors.dataBaseService.listService.removeList(listId);
       },
       addItemToList: (root, { listId, itemId }, context) => {
         return connectors.dataBaseService.listService.addItemToList(

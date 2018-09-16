@@ -33,8 +33,10 @@ export const LastItemSchema = Mongoose.Schema({
 export const ListSchema = Mongoose.Schema({
   name: String,
   date: Date,
+  type: String,
   items: [{ type: Schema.Types.ObjectId, ref: 'Item' }],
-  user: { type: Schema.Types.ObjectId, ref: 'users' }
+  user: { type: Schema.Types.ObjectId, ref: 'users' },
+  description: String
 });
 
 export const NotificationSchema = Mongoose.Schema({

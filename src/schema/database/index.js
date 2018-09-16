@@ -39,7 +39,9 @@ export const List = `
   type List {
     id: ID!
     name: String
+    description: String
     date: Date
+    type: String
     items: [ItemInterface]
     user: User
   }
