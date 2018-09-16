@@ -6,7 +6,7 @@ export default `
     removeSerie(id: String!): String
     completeMovie(id: String!): UserMovie
     completeSerie(id: String!): UserSerie
-    pushNotification(type: String!,title: String, externalId:Int, userEmail: String!): Notification
+    pushNotification(type: String!,title: String, externalId:Int, userEmail: String!, listId: String): Notification
     markNotification(id: String!): Notification
     createList(name: String!,type: String!, description: String, items: [String]): List
     removeList(listId: String!): String

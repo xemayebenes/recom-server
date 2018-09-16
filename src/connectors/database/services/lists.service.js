@@ -4,8 +4,7 @@ import { List, Item } from '../models';
 
 import itemsService from './items.service';
 
-const MOVIE_ITEM = 'Movie';
-const SERIE_ITEM = 'Serie';
+import { MOVIE_ITEM } from '../../../constants';
 
 const findItems = items => {
   return new Promise((resolve, reject) => {

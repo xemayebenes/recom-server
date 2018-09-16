@@ -8,5 +8,6 @@ export const Notification = `
         externalId: Int
         title: String
         from: User
+        listId: String
     }
 `;

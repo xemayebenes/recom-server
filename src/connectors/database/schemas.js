@@ -46,5 +46,6 @@ export const NotificationSchema = Mongoose.Schema({
   date: Date,
   type: String,
   title: String,
-  externalId: Number
+  externalId: Number,
+  listId: String
 });

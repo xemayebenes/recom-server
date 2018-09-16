@@ -26,7 +26,9 @@ export default ({ connectors }) => {
   const resolvers = {
     Query: {
       notifications: (_, args, context) => {
-        return connectors.dataBaseService.getUserNotifications(context.userId);
+        return connectors.dataBaseService.notificationsService.getUserNotifications(
+          context.userId
+        );
       },
       searchFilms(_, { searchText, language }) {
         return connectors.movieDataBaseService.searchFilm(searchText, language);
@@ -107,6 +109,9 @@ export default ({ connectors }) => {
     },
     ItemInterface: {
       __resolveType(data) {
+        if (data.type === 'List') {
+          return 'List';
+        }
         if (data.type === 'Serie') {
           return 'Serie';
         } else {
@@ -134,15 +139,16 @@ export default ({ connectors }) => {
     Mutation: {
       pushNotification: async (
         root,
-        { type, title, externalId, userEmail },
+        { type, title, externalId, userEmail, listId },
         context
       ) => {
         const user = await connectors.dataBaseService.getUserByEmail(userEmail);
 
-        const newNotification = await connectors.dataBaseService.addNotification(
+        const newNotification = await connectors.dataBaseService.notificationsService.addNotification(
           type,
           title,
           externalId,
+          listId,
           user.id,
           context.userId
         );
@@ -151,7 +157,7 @@ export default ({ connectors }) => {
         return newNotification;
       },
       markNotification: async (root, { id }) => {
-        const newNotification = await connectors.dataBaseService.markNotification(
+        const newNotification = await connectors.dataBaseService.notificationsService.markNotification(
           id
         );
 

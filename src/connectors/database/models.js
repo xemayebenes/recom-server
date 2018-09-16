@@ -1,5 +1,7 @@
 import Mongoose from 'mongoose';
 
+import { MOVIE_ITEM, SERIE_ITEM } from '../../constants';
+
 import {
   UserSchema,
   options,
@@ -18,11 +20,11 @@ export const LastItem = Mongoose.model('LastItem', LastItemSchema);
 export const User = Mongoose.model('users', UserSchema);
 
 export const Movie = Item.discriminator(
-  'Movie',
+  MOVIE_ITEM,
   new Mongoose.Schema({}, options)
 );
 export const Serie = Item.discriminator(
-  'Serie',
+  SERIE_ITEM,
   new Mongoose.Schema({}, options)
 );
 
