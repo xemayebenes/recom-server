@@ -19,7 +19,14 @@ export default ({
 
   dataBase.getUserByEmailPassword = (email, password) =>
     User.findOne({ email, password });
+
+  dataBase.createUser = (email, password, user) => {
+    const newUser = new User({ email, password, user });
+    return newUser.save();
+  };
+
   dataBase.getUserByEmail = email => User.findOne({ email });
+  dataBase.getUserByUser = user => User.findOne({ user });
 
   dataBase.listService = listService;
   dataBase.itemsService = itemsService;

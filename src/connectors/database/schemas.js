@@ -3,7 +3,8 @@ import Mongoose from 'mongoose';
 const Schema = Mongoose.Schema;
 
 export const UserSchema = Mongoose.Schema({
-  email: String,
+  email: { type: String, unique: true, required: true },
+  user: { type: String, unique: true, required: true },
   password: String,
   movies: [{ type: Schema.Types.ObjectId, ref: 'Item' }],
   series: [{ type: Schema.Types.ObjectId, ref: 'Item' }],

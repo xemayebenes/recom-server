@@ -75,14 +75,38 @@ graphQLServer.post('/token', bodyParser.json(), async (req, res) => {
   const { email, password } = req.body;
   const user = await dataBase.getUserByEmailPassword(email, password);
   if (!user) {
-    res.send({
-      success: false,
-      jwt: null
-    });
+    res.status(400).send({ code: 'INVALID_CREDENTIALS' });
   }
   res.send({
     success: true,
     jwt: generateJWT({ userId: user.id })
+  });
+});
+
+graphQLServer.post('/register', bodyParser.json(), async (req, res) => {
+  const { email, password, user } = req.body;
+
+  const [userByEmail, userByNick] = await Promise.all([
+    dataBase.getUserByEmail(email),
+    dataBase.getUserByUser(user)
+  ]);
+
+  if (userByEmail) {
+    res.status(400).send({ code: 'INVALID_EMAIL' });
+  }
+
+  if (userByNick) {
+    res.status(400).send({ code: 'INVALID_USER' });
+  }
+
+  const newUser = await dataBase.createUser(email, password, user);
+
+  if (!newUser) {
+    res.status(400).send({ code: 'INVALID_CREDENTIALS' });
+  }
+  res.send({
+    success: true,
+    jwt: generateJWT({ userId: newUser.id })
   });
 });
 

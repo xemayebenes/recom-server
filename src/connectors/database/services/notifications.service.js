@@ -1,5 +1,3 @@
-import Mongoose from 'mongoose';
-
 import { Notification, User } from '../models';
 
 const getNotification = id =>

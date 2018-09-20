@@ -6,6 +6,9 @@ export default ({ connectors }) => {
   const pubsub = new PubSub();
 
   const checkCredentials = (user, userRequired) => {
+    console.log('checkCredentials');
+    console.log('user', user);
+    console.log('userRequired', userRequired);
     if (userRequired !== user) {
       throw new Error('not authorized');
     }
