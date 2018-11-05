@@ -1,12 +1,9 @@
-import { execute, subscribe } from 'graphql';
-import { SubscriptionServer } from 'subscriptions-transport-ws';
-
-import { graphQLServer, engine, schema } from './app';
+import { graphQLServer, engine, server as apolloServer } from './app';
 
 const { createServer } = require('http');
 
 const server = createServer(graphQLServer);
-
+apolloServer.installSubscriptionHandlers(server);
 const GRAPHQL_PORT = process.env.PORT || 3001;
 
 engine.listen(
@@ -20,16 +17,6 @@ engine.listen(
   },
   () => {
     console.log(`Listening on port ${GRAPHQL_PORT}`);
-    new SubscriptionServer(
-      {
-        execute,
-        subscribe,
-        schema
-      },
-      {
-        server,
-        path: '/subscriptions'
-      }
-    );
+    console.log(`Subscription on port ${apolloServer.subscriptionsPath}`);
   }
 );

@@ -1,6 +1,6 @@
 import { LastItem, Movie, User, Serie } from '../models';
 
-import { MOVIE_ITEM, SERIE_ITEM } from '../../../constants';
+import { MOVIE_ITEM, SERIE_ITEM } from '../../constants';
 
 const createMovie = async (externalId, userId) => {
   const movie = new Movie({ externalId, user: userId, completed: false });

@@ -1,3 +1,7 @@
-export default `type Subscription {
-  newNotification(userId: String): Notification
-}`;
+import { gql } from 'apollo-server-express';
+
+export default gql`
+  type Subscription {
+    newNotification(userId: String): Notification
+  }
+`;

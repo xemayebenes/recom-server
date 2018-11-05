@@ -1,4 +1,6 @@
-export const UserMovie = `
+import { gql } from 'apollo-server-express';
+
+export const UserMovie = gql`
   type UserMovie {
     id: ID!
     completed: Boolean
@@ -7,35 +9,35 @@ export const UserMovie = `
   }
 `;
 
-export const UserSerie = `
-type UserSerie {
-  id: ID!
-  completed: Boolean
-  externalId: Int
-  serie: Serie
-}
+export const UserSerie = gql`
+  type UserSerie {
+    id: ID!
+    completed: Boolean
+    externalId: Int
+    serie: Serie
+  }
 `;
-export const LastItem = `
-type LastItem {
-  id: ID!
-  date: Date
-  type: String
-  item: ItemInterface
-}
+export const LastItem = gql`
+  type LastItem {
+    id: ID!
+    date: Date
+    type: String
+    item: ItemInterface
+  }
 `;
 
-export const Date = `
+export const Date = gql`
   scalar Date
 `;
 
-export const User = `
+export const User = gql`
   type User {
     id: ID!
     email: String
   }
 `;
 
-export const List = `
+export const List = gql`
   type List {
     id: ID!
     name: String

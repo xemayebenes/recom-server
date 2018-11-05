@@ -1,5 +1,7 @@
-export const SearchMovieItem = `
-type SearchMovieItem {
+import { gql } from 'apollo-server-express';
+
+export const SearchMovieItem = gql`
+  type SearchMovieItem {
     externalId: Int!
     title: String
     images: Images!
@@ -13,12 +15,13 @@ type SearchMovieItem {
     release_date: String
     original_title: String
     video: Boolean
-  }`;
+  }
+`;
 
-export const SearchSerieItem = `
+export const SearchSerieItem = gql`
   type SearchSerieItem {
     externalId: Int!
-    title: String !
+    title: String!
     images: Images!
     popularity: Float
     vote_average: Float
@@ -28,9 +31,11 @@ export const SearchSerieItem = `
     vote_count: Int
     first_air_date: String
     origin_country: [String]
-  }`;
+  }
+`;
 
-export const ItemInterface = `interface ItemInterface {
+export const ItemInterface = gql`
+  interface ItemInterface {
     id: ID!
     externalId: Int!
     title: String!
@@ -40,10 +45,11 @@ export const ItemInterface = `interface ItemInterface {
     vote_count: Int
     vote_average: Float
     images: Images!
-  }`;
+  }
+`;
 
-export const Movie = `
-  type Movie implements ItemInterface{
+export const Movie = gql`
+  type Movie implements ItemInterface {
     id: ID!
     externalId: Int!
     title: String!
@@ -60,10 +66,11 @@ export const Movie = `
     images: Images!
     videoData: [VideoData]
     omdbData: FilmOMDBData
-  }`;
+  }
+`;
 
-export const Serie = `
-  type Serie implements ItemInterface @cacheControl(maxAge: 5){
+export const Serie = gql`
+  type Serie implements ItemInterface @cacheControl(maxAge: 5) {
     id: ID!
     externalId: Int!
     title: String!
@@ -73,16 +80,17 @@ export const Serie = `
     vote_count: Int
     vote_average: Float
     images: Images!
-    name: String !
+    name: String!
     original_name: String
     number_of_episodes: Int
     number_of_seasons: Int
     seasons: [Season]
     videoData: [VideoData]
     omdbData: SerieOMDBData
-  }`;
-export const VideoData = `
-  type VideoData @cacheControl(maxAge: 5){
+  }
+`;
+export const VideoData = gql`
+  type VideoData @cacheControl(maxAge: 5) {
     id: String
     iso_639_1: String
     iso_3166_1: String
@@ -92,31 +100,35 @@ export const VideoData = `
     size: Int
     type: String
     trailer: String
-  }`;
-export const Season = `
-  type Season @cacheControl(maxAge: 5){
+  }
+`;
+export const Season = gql`
+  type Season @cacheControl(maxAge: 5) {
     id: Int
     air_date: String
     episode_count: Int
     poster_path: String
     season_number: Int
   }
-  `;
-export const Genre = `
-  type Genre @cacheControl(maxAge: 5){
+`;
+export const Genre = gql`
+  type Genre @cacheControl(maxAge: 5) {
     id: Int!
     name: String
-  }`;
+  }
+`;
 
-export const Images = `
-type Images @cacheControl(maxAge: 5){
+export const Images = gql`
+  type Images @cacheControl(maxAge: 5) {
     small: ImagesData
     medium: ImagesData
     large: ImagesData
-}`;
+  }
+`;
 
-export const ImagesData = `
-type ImagesData @cacheControl(maxAge: 5){
+export const ImagesData = gql`
+  type ImagesData @cacheControl(maxAge: 5) {
     main: String!
     secondary: String!
-}`;
+  }
+`;

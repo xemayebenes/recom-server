@@ -2,25 +2,22 @@ import { GraphQLScalarType } from 'graphql';
 import { Kind } from 'graphql/language';
 import { PubSub } from 'graphql-subscriptions';
 
-export default ({ connectors }) => {
+export default ({ dataBaseService }) => {
   const pubsub = new PubSub();
 
   const checkCredentials = (user, userRequired) => {
-    console.log('checkCredentials');
-    console.log('user', user);
-    console.log('userRequired', userRequired);
     if (userRequired !== user) {
       throw new Error('not authorized');
     }
   };
 
-  const fetchItemInterface = item => {
+  const fetchItemInterface = (item, fetcher) => {
     return Promise.resolve()
       .then(() => {
         if (item.type === 'Serie') {
-          return connectors.movieDataBaseService.fetchSerie(item.externalId);
+          return fetcher.getSerie(item.externalId);
         } else {
-          return connectors.movieDataBaseService.fetchMovie(item.externalId);
+          return fetcher.getMovie(item.externalId);
         }
       })
       .then(itemResolved => ({ ...itemResolved, id: item.id }));
@@ -29,85 +26,75 @@ export default ({ connectors }) => {
   const resolvers = {
     Query: {
       notifications: (_, args, context) => {
-        return connectors.dataBaseService.notificationsService.getUserNotifications(
+        return dataBaseService.notificationsService.getUserNotifications(
           context.userId
         );
       },
-      searchFilms(_, { searchText, language }) {
-        return connectors.movieDataBaseService.searchFilm(searchText, language);
+      searchFilms(_, { searchText, language }, { dataSources }) {
+        return dataSources.MovieDataBaseAPI.searchFilm(searchText, language);
       },
-      searchSeries(_, { searchText, language }) {
-        return connectors.movieDataBaseService.searchSeries(
-          searchText,
-          language
-        );
+      searchSeries(_, { searchText, language }, { dataSources }) {
+        return dataSources.MovieDataBaseAPI.searchSerie(searchText, language);
       },
-      getMovie(_, { externalId, language }) {
-        return connectors.movieDataBaseService.fetchMovie(externalId, language);
+      getMovie(_, { externalId, language }, { dataSources }) {
+        return dataSources.MovieDataBaseAPI.getMovie(externalId, language);
       },
-      getSerie(_, { externalId, language }) {
-        return connectors.movieDataBaseService.fetchSerie(externalId, language);
+      getSerie(_, { externalId, language }, { dataSources }) {
+        return dataSources.MovieDataBaseAPI.getSerie(externalId, language);
       },
       getUserSeries(_, { userId }, context) {
         checkCredentials(context.userId, userId);
-        return connectors.dataBaseService.itemsService.getSeriesByUser(userId);
+        return dataBaseService.itemsService.getSeriesByUser(userId);
       },
       getUserMovies(_, { userId }, context) {
         checkCredentials(context.userId, userId);
-        return connectors.dataBaseService.itemsService.getMoviesByUser(userId);
+        return dataBaseService.itemsService.getMoviesByUser(userId);
       },
       getUserLastItems(_, { userId }, context) {
         checkCredentials(context.userId, userId);
-        return connectors.dataBaseService.itemsService.getLastItemsByUser(
-          userId
-        );
+        return dataBaseService.itemsService.getLastItemsByUser(userId);
       },
       getUserMovie(_, { userId, id }, context) {
         checkCredentials(context.userId, userId);
-        return connectors.dataBaseService.itemsService.getMovieById(id);
+        return dataBaseService.itemsService.getMovieById(id);
       },
       getUserSerie(_, { userId, id }, context) {
         checkCredentials(context.userId, userId);
-        return connectors.dataBaseService.itemsService.getSerieById(id);
+        return dataBaseService.itemsService.getSerieById(id);
       },
       lists(_, { userId, type }, context) {
         checkCredentials(context.userId, userId);
-        return connectors.dataBaseService.listService.getListsByUser(
-          userId,
-          type
-        );
+        return dataBaseService.listService.getListsByUser(userId, type);
       },
       list(_, { id, userId }, context) {
         checkCredentials(context.userId, userId);
-        return connectors.dataBaseService.listService.getList(id);
+        return dataBaseService.listService.getList(id);
       }
     },
     Movie: {
-      videoData(movie) {
-        return connectors.movieDataBaseService.fetchVideoData(movie.externalId);
+      videoData(movie, args, { dataSources }) {
+        return dataSources.MovieDataBaseAPI.getVideoData(movie.externalId);
       },
-      omdbData(movie) {
-        return connectors.omdbService.fetchOMDBMovie(movie.imdb_id);
+      omdbData(movie, args, { dataSources }) {
+        return dataSources.OmdbAPI.getMovie(movie.imdb_id);
       }
     },
     Serie: {
-      videoData(serie) {
-        return connectors.movieDataBaseService.fetchSerieVideoData(
-          serie.externalId
-        );
+      videoData(serie, args, { dataSources }) {
+        return dataSources.MovieDataBaseAPI.getSerieVideoData(serie.externalId);
       },
-      omdbData(serie) {
-        return connectors.omdbService.fetchOMDBSerie(serie.name);
+      omdbData(serie, args, { dataSources }) {
+        return dataSources.OmdbAPI.getSerie(serie.name);
       }
     },
     UserMovie: {
-      film(userMovie) {
-        return connectors.movieDataBaseService.fetchMovie(userMovie.externalId);
+      film(userMovie, args, { dataSources }) {
+        return dataSources.MovieDataBaseAPI.getMovie(userMovie.externalId);
       }
     },
     UserSerie: {
-      serie(userSerie) {
-        return connectors.movieDataBaseService.fetchSerie(userSerie.externalId);
+      serie(userSerie, args, { dataSources }) {
+        return dataSources.MovieDataBaseAPI.getSerie(userSerie.externalId);
       }
     },
     ItemInterface: {
@@ -123,13 +110,17 @@ export default ({ connectors }) => {
       }
     },
     LastItem: {
-      async item(lastItem) {
-        return fetchItemInterface(lastItem.item);
+      async item(lastItem, args, { dataSources }) {
+        return fetchItemInterface(lastItem.item, dataSources.MovieDataBaseAPI);
       }
     },
     List: {
-      async items(list) {
-        return Promise.all(list.items.map(fetchItemInterface));
+      async items(list, args, { dataSources }) {
+        return Promise.all(
+          list.items.map(item =>
+            fetchItemInterface(item, dataSources.MovieDataBaseAPI)
+          )
+        );
       }
     },
     Subscription: {
@@ -145,9 +136,9 @@ export default ({ connectors }) => {
         { type, title, externalId, userEmail, listId },
         context
       ) => {
-        const user = await connectors.dataBaseService.getUserByEmail(userEmail);
+        const user = await dataBaseService.getUserByEmail(userEmail);
 
-        const newNotification = await connectors.dataBaseService.notificationsService.addNotification(
+        const newNotification = await dataBaseService.notificationsService.addNotification(
           type,
           title,
           externalId,
@@ -160,52 +151,40 @@ export default ({ connectors }) => {
         return newNotification;
       },
       markNotification: async (root, { id }) => {
-        const newNotification = await connectors.dataBaseService.notificationsService.markNotification(
+        const newNotification = await dataBaseService.notificationsService.markNotification(
           id
         );
 
         return newNotification;
       },
       addMovie: (root, { externalId }, context) => {
-        return connectors.dataBaseService.itemsService.createMovie(
+        return dataBaseService.itemsService.createMovie(
           externalId,
           context.userId
         );
       },
       addSerie: (root, { externalId }, context) => {
-        return connectors.dataBaseService.itemsService.createSerie(
+        return dataBaseService.itemsService.createSerie(
           externalId,
           context.userId
         );
       },
       removeMovie: async (root, { id }, context) => {
-        await connectors.dataBaseService.itemsService.removeMovie(
-          id,
-          context.userId
-        );
+        await dataBaseService.itemsService.removeMovie(id, context.userId);
         return id;
       },
       removeSerie: async (root, { id }, context) => {
-        await connectors.dataBaseService.itemsService.removeSerie(
-          id,
-          context.userId
-        );
+        await dataBaseService.itemsService.removeSerie(id, context.userId);
         return id;
       },
       completeMovie: (root, { id }, context) => {
-        return connectors.dataBaseService.itemsService.completeMovie(
-          id,
-          context.userId
-        );
+        return dataBaseService.itemsService.completeMovie(id, context.userId);
       },
       completeSerie: (root, { id }, context) => {
-        return connectors.dataBaseService.itemsService.completeSerie(
-          id,
-          context.userId
-        );
+        return dataBaseService.itemsService.completeSerie(id, context.userId);
       },
       createList: (root, { name, description, type, items }, context) => {
-        return connectors.dataBaseService.listService.createList(
+        return dataBaseService.listService.createList(
           name,
           description,
           type,
@@ -213,26 +192,17 @@ export default ({ connectors }) => {
           context.userId
         );
       },
-      importList: (root, { listId, userId }, context) => {
-        return connectors.dataBaseService.listService.importList(
-          listId,
-          userId
-        );
+      importList: (root, { listId, userId }) => {
+        return dataBaseService.listService.importList(listId, userId);
       },
       removeList: (root, { listId }) => {
-        return connectors.dataBaseService.listService.removeList(listId);
+        return dataBaseService.listService.removeList(listId);
       },
-      addItemToList: (root, { listId, itemId }, context) => {
-        return connectors.dataBaseService.listService.addItemToList(
-          listId,
-          itemId
-        );
+      addItemToList: (root, { listId, itemId }) => {
+        return dataBaseService.listService.addItemToList(listId, itemId);
       },
-      removeItemFromList: (root, { listId, itemId }, context) => {
-        return connectors.dataBaseService.listService.removeItemFromList(
-          listId,
-          itemId
-        );
+      removeItemFromList: (root, { listId, itemId }) => {
+        return dataBaseService.listService.removeItemFromList(listId, itemId);
       }
     },
     Date: new GraphQLScalarType({

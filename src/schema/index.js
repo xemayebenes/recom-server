@@ -1,4 +1,3 @@
-import { makeExecutableSchema } from 'graphql-tools';
 import { Rating, FilmOMDBData, SerieOMDBData } from './omdb';
 import {
   SearchMovieItem,
@@ -21,7 +20,7 @@ import mutations from './mutations';
 import subscriptions from './subscriptions';
 
 export default ({ resolvers }) => {
-  const schema = makeExecutableSchema({
+  const schema = {
     typeDefs: [
       queries,
       mutations,
@@ -48,7 +47,7 @@ export default ({ resolvers }) => {
       List
     ],
     resolvers
-  });
+  };
 
   return schema;
 };

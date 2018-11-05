@@ -1,6 +1,6 @@
 import Mongoose from 'mongoose';
 
-import { MOVIE_ITEM, SERIE_ITEM } from '../../constants';
+import { MOVIE_ITEM, SERIE_ITEM } from '../constants';
 
 import {
   UserSchema,

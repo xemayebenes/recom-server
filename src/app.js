@@ -4,14 +4,13 @@ import cors from 'cors';
 import jwt from 'express-jwt';
 import jsonwebtoken from 'jsonwebtoken';
 
-import { graphqlExpress, graphiqlExpress } from 'apollo-server-express';
+import { ApolloServer } from 'apollo-server-express';
 import bodyParser from 'body-parser';
 import { ApolloEngine } from 'apollo-engine';
 
-import MovieDataBaseService from './connectors/movieDataBase';
-import OmdbService from './connectors/omdb';
-import DataBase from './connectors/database';
-import Connectors from './connectors';
+import MovieDataBaseAPI from './datasources/movieDataBase';
+import OmdbAPI from './datasources/omdb';
+import DataBase from './database';
 import Resolvers from './resolvers';
 import Schema from './schema';
 
@@ -26,20 +25,8 @@ const dataBase = DataBase({
 
 dataBase.connect();
 
-const movieDataBaseService = MovieDataBaseService({
-  //apiKey:''
-});
-const omdbService = OmdbService({
-  //apiKey: ''
-});
-const connectors = Connectors({
-  movieDataBaseService,
-  omdbService,
-  dataBaseService: dataBase
-});
-
 const resolvers = Resolvers({
-  connectors
+  dataBaseService: dataBase
 });
 
 const schema = Schema({
@@ -66,8 +53,8 @@ const engine = new ApolloEngine({
 const secret = process.env.JWT_SECRET || 'xema2018';
 const graphQLServer = express();
 
-const jwtCheck = jwt({ secret }); // change out your secret for each environment
-//graphQLServer.use(jwtCheck);
+const jwtCheck = jwt({ secret }); //.unless({ path: ['/graphql'], method: 'GET' }); // change out your secret for each environment
+graphQLServer.post('/graphql', jwtCheck);
 graphQLServer.use(cors());
 
 //TODO CHANGE TO MODULE
@@ -110,24 +97,33 @@ graphQLServer.post('/register', bodyParser.json(), async (req, res) => {
   });
 });
 
-graphQLServer.use(
-  '/graphql',
-  bodyParser.json(),
-  jwtCheck,
-  graphqlExpress(req => ({
-    context: req.user,
-    schema,
-    tracing: true,
-    cacheControl: true
-  }))
-);
+const server = new ApolloServer({
+  typeDefs: schema.typeDefs,
+  resolvers: schema.resolvers,
+  tracing: true,
+  cacheControl: true,
+  engine: false,
+  dataSources: () => {
+    return {
+      MovieDataBaseAPI: new MovieDataBaseAPI(),
+      OmdbAPI: new OmdbAPI()
+    };
+  },
+  context: ({ req, connection }) => {
+    if (connection) {
+      return {};
+    } else {
+      return req.user;
+    }
+  }
+});
+server.applyMiddleware({
+  app: graphQLServer,
+  path: '/graphql',
+  gui: {
+    endpoint: '/graphql',
+    subscriptionEndpoint: `ws://localhost:3001/graphql`
+  }
+});
 
-graphQLServer.use(
-  '/graphiql',
-  graphiqlExpress({
-    endpointURL: '/graphql',
-    subscriptionsEndpoint: `ws://localhost:3001/subscriptions`
-  })
-);
-
-export { graphQLServer, engine, schema };
+export { graphQLServer, engine, schema, server };

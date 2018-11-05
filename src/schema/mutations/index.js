@@ -1,4 +1,6 @@
-export default `
+import { gql } from 'apollo-server-express';
+
+export default gql`
   type Mutation {
     addMovie(externalId: Int!): UserMovie
     addSerie(externalId: Int!): UserSerie
@@ -6,12 +8,23 @@ export default `
     removeSerie(id: String!): String
     completeMovie(id: String!): UserMovie
     completeSerie(id: String!): UserSerie
-    pushNotification(type: String!,title: String, externalId:Int, userEmail: String!, listId: String): Notification
+    pushNotification(
+      type: String!
+      title: String
+      externalId: Int
+      userEmail: String!
+      listId: String
+    ): Notification
     markNotification(id: String!): Notification
-    createList(name: String!,type: String!, description: String, items: [String]): List
+    createList(
+      name: String!
+      type: String!
+      description: String
+      items: [String]
+    ): List
     removeList(listId: String!): String
     addItemToList(listId: String!, itemId: String!): List
     removeItemFromList(listId: String!, itemId: String!): List
-    importList(listId:String!, userId:String!): List
+    importList(listId: String!, userId: String!): List
   }
 `;
