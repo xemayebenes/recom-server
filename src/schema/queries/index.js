@@ -2,11 +2,14 @@ import { gql } from 'apollo-server-express';
 
 export default gql`
   type Query {
-    getFortuneCookie: String @cacheControl(maxAge: 5)
     searchFilms(searchText: String!, language: String): [SearchMovieItem]
+      @cacheControl(maxAge: 86400)
     searchSeries(searchText: String!, language: String): [SearchSerieItem]
+      @cacheControl(maxAge: 86400)
     getMovie(externalId: Int!, language: String): Movie
-    getSerie(externalId: Int!, language: String): Serie @cacheControl(maxAge: 5)
+      @cacheControl(maxAge: 86400)
+    getSerie(externalId: Int!, language: String): Serie
+      @cacheControl(maxAge: 86400)
     getUserSeries(userId: String!): [UserSerie]
     getUserMovies(userId: String!): [UserMovie]
     getUserLastItems(userId: String!): [LastItem]

@@ -1,13 +1,14 @@
 import { GraphQLScalarType } from 'graphql';
 import { Kind } from 'graphql/language';
 import { PubSub } from 'graphql-subscriptions';
+import { ForbiddenError, ApolloError } from 'apollo-server-express';
 
 export default ({ dataBaseService }) => {
   const pubsub = new PubSub();
 
   const checkCredentials = (user, userRequired) => {
     if (userRequired !== user) {
-      throw new Error('not authorized');
+      throw new ForbiddenError();
     }
   };
 

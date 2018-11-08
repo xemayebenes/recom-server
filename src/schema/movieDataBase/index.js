@@ -1,7 +1,7 @@
 import { gql } from 'apollo-server-express';
 
 export const SearchMovieItem = gql`
-  type SearchMovieItem {
+  type SearchMovieItem @cacheControl(maxAge: 86400) {
     externalId: Int!
     title: String
     images: Images!
@@ -49,7 +49,7 @@ export const ItemInterface = gql`
 `;
 
 export const Movie = gql`
-  type Movie implements ItemInterface {
+  type Movie implements ItemInterface @cacheControl(maxAge: 86400) {
     id: ID!
     externalId: Int!
     title: String!
@@ -70,7 +70,7 @@ export const Movie = gql`
 `;
 
 export const Serie = gql`
-  type Serie implements ItemInterface @cacheControl(maxAge: 5) {
+  type Serie implements ItemInterface @cacheControl(maxAge: 86400) {
     id: ID!
     externalId: Int!
     title: String!
@@ -90,7 +90,7 @@ export const Serie = gql`
   }
 `;
 export const VideoData = gql`
-  type VideoData @cacheControl(maxAge: 5) {
+  type VideoData @cacheControl(maxAge: 86400) {
     id: String
     iso_639_1: String
     iso_3166_1: String
@@ -103,7 +103,7 @@ export const VideoData = gql`
   }
 `;
 export const Season = gql`
-  type Season @cacheControl(maxAge: 5) {
+  type Season {
     id: Int
     air_date: String
     episode_count: Int
@@ -112,14 +112,14 @@ export const Season = gql`
   }
 `;
 export const Genre = gql`
-  type Genre @cacheControl(maxAge: 5) {
+  type Genre {
     id: Int!
     name: String
   }
 `;
 
 export const Images = gql`
-  type Images @cacheControl(maxAge: 5) {
+  type Images {
     small: ImagesData
     medium: ImagesData
     large: ImagesData
@@ -127,7 +127,7 @@ export const Images = gql`
 `;
 
 export const ImagesData = gql`
-  type ImagesData @cacheControl(maxAge: 5) {
+  type ImagesData {
     main: String!
     secondary: String!
   }
